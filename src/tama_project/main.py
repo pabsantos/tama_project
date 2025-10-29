@@ -1,4 +1,10 @@
 from rain_data import load_rain_data, create_pcd_data, calc_daily_rain
+from filter_sample import (
+    select_tti_basin,
+    filter_points,
+    filter_od_zones,
+    filter_rain_data,
+)
 import os
 import pandas as pd
 import geopandas as gpd
@@ -10,7 +16,7 @@ console = Console()
 
 ## rain data ---
 
-console.rule("Loading input data")
+console.rule("Loading input data", align="left")
 
 rain_data_path = "data/rain.parquet"
 rain_files_path = "data/ped_rain/"
@@ -48,6 +54,21 @@ tti_shapes = gpd.read_file(tti_path)
 console.print(f"Loading city limits from '{sp_limits_path}'")
 sp_limits = gpd.read_file(sp_limits_path)
 
-# study area ---
+# study sample ---
 
-console.rule("Filtering data")
+console.rule("Filtering data", align="left")
+
+console.print("Selecting sample microbasins")
+tti_sample = select_tti_basin(tti_shapes)
+
+console.print("Selecting sample PCDs")
+pcd_sample = filter_points(pcd_data, tti_sample)
+
+console.print("Selecting sample flood points")
+sample_flood_points = filter_points(flood_points, tti_sample)
+
+console.print("Selecting sample OD zones")
+od_zones_sample = filter_od_zones(od_zones, tti_sample)
+
+console.print("Selecting sample rain data")
+sample_rain_df = filter_rain_data(rain_df, pcd_data)
