@@ -8,7 +8,9 @@ from filter_sample import (
 import os
 import pandas as pd
 import geopandas as gpd
+import osmnx as ox
 from rich.console import Console
+from network import load_network, calc_params
 
 console = Console()
 
@@ -16,7 +18,7 @@ console = Console()
 
 ## rain data ---
 
-console.rule("Loading input data", align="left")
+console.rule("Loading input data")
 
 rain_data_path = "data/rain.parquet"
 rain_files_path = "data/ped_rain/"
@@ -56,7 +58,7 @@ sp_limits = gpd.read_file(sp_limits_path)
 
 # study sample ---
 
-console.rule("Filtering data", align="left")
+console.rule("Filtering data")
 
 console.print("Selecting sample microbasins")
 tti_sample = select_tti_basin(tti_shapes)
@@ -72,3 +74,17 @@ od_zones_sample = filter_od_zones(od_zones, tti_sample)
 
 console.print("Selecting sample rain data")
 sample_rain_df = filter_rain_data(rain_df, pcd_data)
+
+# Street network ---
+
+console.rule("Street network")
+
+console.print("Loading network")
+G = load_network(od_zones_sample)
+
+console.print("Calculating network stats")
+console.print(ox.basic_stats(G))
+
+console.print("Calculating network nodes degree and clustering")
+G_params = calc_params(G)
+console.print(G_params)
