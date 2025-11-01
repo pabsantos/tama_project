@@ -27,10 +27,14 @@ def calc_params(G: nx.MultiDiGraph):
     )
 
 
-def calc_ebc(G):
-    if os.path.exists("data/ebc_results"):
-        console.print("Betweenness already calculated, loading now")
-        pass
+def calc_ebc(G, dest_path: str) -> gpd.GeoDataFrame:
+    if os.path.exists(dest_path):
+        console.print(f"Ebc already calculated, loading from '{dest_path}'")
+        G_gdf = gpd.read_file(dest_path)
     else:
         console.print("Calculating Betweenness")
-        return nx.edge_betweenness_centrality(G, backend="parallel")
+        G_ebc = nx.edge_betweenness_centrality(G, backend="parallel")
+        nx.set_edge_attributes(G, G_ebc, "ebc")
+        G_gdf = ox.graph_to_gdfs(G, nodes=False, edges=True).reset_index()
+        console.print(f"Saving edge gdf to {dest_path}")
+    return G_gdf

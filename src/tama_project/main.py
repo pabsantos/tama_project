@@ -9,7 +9,7 @@ import geopandas as gpd
 import osmnx as ox
 import networkx as nx
 from rich.console import Console
-from network import load_network, calc_params
+from network import load_network, calc_params, calc_ebc
 
 # setup ---
 
@@ -83,14 +83,13 @@ console.print("Loading network")
 G = load_network(od_zones_sample)
 
 console.print("Calculating network stats")
-console.print(ox.basic_stats(G))
+# console.print(ox.basic_stats(G))
 
 console.print("Calculating network nodes degree and clustering")
 G_params = calc_params(G)
-console.print(G_params)
+# console.print(G_params)
 
-console.print("Calculating edge betweenness centrality")
-G_ebc = nx.edge_betweenness_centrality(G, backend="parallel")
+console.print("Calculating edge betweenness centrality and converting to gdf")
 
-with open("data/ebc.txt", "w") as f:
-    f.write(str(G_ebc))
+G_path = "data/G_gdf.gpkg"
+G_gdf = calc_ebc(G, G_path)
