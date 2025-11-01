@@ -4,6 +4,7 @@ from filter_sample import (
     filter_points,
     filter_od_zones,
     filter_rain_data,
+    filter_level_data,
 )
 import geopandas as gpd
 import networkx as nx
@@ -41,8 +42,8 @@ pcd_data = create_pcd_data(df_rain)
 
 console.rule("Loading water level data")
 
-level_csv_path = "data/water_level.csv"
-level_parquet_path = "data/water_level.parquet"
+level_csv_path = "data/level.csv"
+level_parquet_path = "data/level.parquet"
 daily_level_data_path = "data/daily_level.parquet"
 
 console.print("Loading water level input data")
@@ -59,6 +60,7 @@ flood_points_path = "data/flood_cge/2018_a_04-2025_TTI_EDITADO.shp"
 od_zones_path = "data/od_zones/Zonas_2023.shp"
 tti_path = "data/tti_shape/Microbacias_Tamanduatei.shp"
 sp_limits_path = "data/sp_limits/Municipios_2023.shp"
+pcd_level_path = "data/pcd_level/CoordenadasSerieHistorica_2015-2025.shp"
 
 console.print(f"Loading flood points from '{flood_points_path}'")
 flood_points = gpd.read_file(flood_points_path)
@@ -72,6 +74,9 @@ tti_shapes = gpd.read_file(tti_path)
 console.print(f"Loading city limits from '{sp_limits_path}'")
 sp_limits = gpd.read_file(sp_limits_path)
 
+console.print(f"Loading PCD level data from '{pcd_level_path}'")
+pcd_level = gpd.read_file(pcd_level_path)
+
 # study sample ---
 
 console.rule("Filtering data")
@@ -82,6 +87,9 @@ tti_sample = select_tti_basin(tti_shapes)
 console.print("Selecting sample PCDs")
 pcd_sample = filter_points(pcd_data, tti_sample)
 
+console.print("Selecting sample level PCDs")
+pcd_level_sample = filter_points(pcd_level, tti_sample)
+
 console.print("Selecting sample flood points")
 sample_flood_points = filter_points(flood_points, tti_sample)
 
@@ -90,6 +98,9 @@ od_zones_sample = filter_od_zones(od_zones, tti_sample)
 
 console.print("Selecting sample rain data")
 sample_rain_df = filter_rain_data(df_daily_rain, pcd_data)
+
+console.print("Selecting sample level data")
+sample_level_df = filter_level_data(df_daily_level, pcd_level)
 
 # Street network ---
 
