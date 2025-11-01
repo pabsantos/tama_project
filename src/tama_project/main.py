@@ -6,10 +6,10 @@ from filter_sample import (
     filter_rain_data,
 )
 import geopandas as gpd
-import osmnx as ox
 import networkx as nx
 from rich.console import Console
 from network import load_network, calc_params, calc_ebc
+from level_data import load_level_data, calc_daily_level
 
 # setup ---
 
@@ -22,7 +22,7 @@ nxp_config.verbose = 50
 
 ## rain data ---
 
-console.rule("Loading input data")
+console.rule("Loading rain data")
 
 rain_data_path = "data/rain.parquet"
 daily_rain_data_path = "data/daily_rain.parquet"
@@ -37,7 +37,23 @@ df_daily_rain = calc_daily_rain(df_rain, daily_rain_data_path)
 console.print("Extracting 'pcd_data'")
 pcd_data = create_pcd_data(df_rain)
 
+## Water level data ---
+
+console.rule("Loading water level data")
+
+level_csv_path = "data/water_level.csv"
+level_parquet_path = "data/water_level.parquet"
+daily_level_data_path = "data/daily_level.parquet"
+
+console.print("Loading water level input data")
+df_level = load_level_data(level_csv_path, level_parquet_path)
+
+console.print("Calculating daily water level data")
+df_daily_level = calc_daily_level(df_level, daily_level_data_path)
+
 ## geo data ---
+
+console.rule("Loading geo data")
 
 flood_points_path = "data/flood_cge/2018_a_04-2025_TTI_EDITADO.shp"
 od_zones_path = "data/od_zones/Zonas_2023.shp"
