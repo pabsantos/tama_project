@@ -5,14 +5,18 @@ from filter_sample import (
     filter_od_zones,
     filter_rain_data,
 )
-import os
-import pandas as pd
 import geopandas as gpd
 import osmnx as ox
+import networkx as nx
 from rich.console import Console
 from network import load_network, calc_params
 
+# setup ---
+
 console = Console()
+nxp_config = nx.config.backends.parallel
+nxp_config.n_jobs = 10
+nxp_config.verbose = 50
 
 # data ---
 
@@ -21,21 +25,17 @@ console = Console()
 console.rule("Loading input data")
 
 rain_data_path = "data/rain.parquet"
+daily_rain_data_path = "data/daily_rain.parquet"
 rain_files_path = "data/ped_rain/"
 
-console.print(f"Loading rain csv files from '{rain_files_path}'")
-full_df = load_rain_data(rain_files_path)
+console.print("Loading rain data")
+df_rain = load_rain_data(rain_files_path, rain_data_path)
 
-if os.path.exists(rain_data_path):
-    console.print(f"'{rain_data_path}' already exists, loading parquet")
-    rain_df = pd.read_parquet(rain_data_path)
-else:
-    console.print(f"Calculating from '{rain_files_path}'")
-    rain_df = calc_daily_rain(full_df)
-    rain_df.to_parquet(path=rain_data_path)
+console.print("Calculating daily rain data")
+df_daily_rain = calc_daily_rain(df_rain, daily_rain_data_path)
 
 console.print("Extracting 'pcd_data'")
-pcd_data = create_pcd_data(full_df)
+pcd_data = create_pcd_data(df_rain)
 
 ## geo data ---
 
@@ -73,7 +73,7 @@ console.print("Selecting sample OD zones")
 od_zones_sample = filter_od_zones(od_zones, tti_sample)
 
 console.print("Selecting sample rain data")
-sample_rain_df = filter_rain_data(rain_df, pcd_data)
+sample_rain_df = filter_rain_data(df_daily_rain, pcd_data)
 
 # Street network ---
 
@@ -88,3 +88,9 @@ console.print(ox.basic_stats(G))
 console.print("Calculating network nodes degree and clustering")
 G_params = calc_params(G)
 console.print(G_params)
+
+console.print("Calculating edge betweenness centrality")
+G_ebc = nx.edge_betweenness_centrality(G, backend="parallel")
+
+with open("data/ebc.txt", "w") as f:
+    f.write(str(G_ebc))

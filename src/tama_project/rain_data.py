@@ -1,18 +1,29 @@
 import pandas as pd
 import os
 import geopandas as gpd
+from rich.console import Console
+
+console = Console()
 
 
-def load_rain_data(path: str) -> pd.DataFrame:
-    csv_paths = [path + csv for csv in os.listdir(path)]
+def load_rain_data(path: str, parquet_path: str) -> pd.DataFrame:
+    if os.path.exists(parquet_path):
+        console.print(f"'{parquet_path}' already exists, loading parquet")
+        rain_df = pd.read_parquet(parquet_path)
+    else:
+        console.print(f"Loading rain csv files from '{path}'")
+        csv_paths = [path + csv for csv in os.listdir(path)]
 
-    df_list = []
+        df_list = []
 
-    for path in csv_paths:
-        df = pd.read_csv(path)
-        df_list.append(df)
+        for path in csv_paths:
+            df = pd.read_csv(path)
+            df_list.append(df)
 
-    return pd.concat(df_list, ignore_index=True)
+        rain_df = pd.concat(df_list, ignore_index=True)
+        console.print(f"Saving rain data to {parquet_path}")
+        rain_df.to_parquet(parquet_path)
+    return rain_df
 
 
 def create_pcd_data(rain_data: pd.DataFrame) -> gpd.GeoDataFrame:
@@ -25,16 +36,24 @@ def create_pcd_data(rain_data: pd.DataFrame) -> gpd.GeoDataFrame:
     )
 
 
-def calc_daily_rain(rain_data: pd.DataFrame) -> pd.DataFrame:
-    df_rain = rain_data[rain_data["id_sensor"] == 10]
-    df_rain = df_rain.copy()
-    df_rain[["data", "hora"]] = df_rain.datahora.str.split(" ", expand=True)
+def calc_daily_rain(rain_data: pd.DataFrame, parquet_path: str) -> pd.DataFrame:
+    if os.path.exists(parquet_path):
+        console.print(f"'{parquet_path}' already exists, loading parquet")
+        daily_rain_df = pd.read_parquet(parquet_path)
+    else:
+        console.print("Calculating daily rain data")
+        df_rain = rain_data[rain_data["id_sensor"] == 10]
+        df_rain = df_rain.copy()
+        df_rain[["data", "hora"]] = df_rain.datahora.str.split(" ", expand=True)
 
-    df_daily_rain = (
-        df_rain.groupby(["codestacao", "data"])
-        .agg(daily_value=("valor", "sum"))
-        .reset_index()
-    )
+        daily_rain_df = (
+            df_rain.groupby(["codestacao", "data"])
+            .agg(daily_value=("valor", "sum"))
+            .reset_index()
+        )
+
+        console.print(f"Saving daily rain data to {parquet_path}")
+        daily_rain_df.to_parquet(parquet_path)
 
     # df_daily_rain.data = pd.to_datetime(df_daily_rain.data)
-    return df_daily_rain
+    return daily_rain_df

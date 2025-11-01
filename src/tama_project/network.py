@@ -2,6 +2,10 @@ import osmnx as ox
 import networkx as nx
 import geopandas as gpd
 import pandas as pd
+import os
+from rich.console import Console
+
+console = Console()
 
 
 def load_network(od_zones_area: gpd.GeoDataFrame):
@@ -23,5 +27,10 @@ def calc_params(G: nx.MultiDiGraph):
     )
 
 
-def calc_bc():
-    pass
+def calc_ebc(G):
+    if os.path.exists("data/ebc_results"):
+        console.print("Betweenness already calculated, loading now")
+        pass
+    else:
+        console.print("Calculating Betweenness")
+        return nx.edge_betweenness_centrality(G, backend="parallel")
