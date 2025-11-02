@@ -15,6 +15,11 @@ from analysis import (
     fill_missing_dates,
     plot_rain_time_series,
     plot_spearman_correlogram,
+    plot_mean_rain_time_series,
+    plot_level_time_series,
+    plot_spearman_correlogram_level,
+    plot_mean_level_time_series,
+    plot_network_scatter,
 )
 
 # setup ---
@@ -133,3 +138,22 @@ plot_rain_time_series(sample_rain_df, figsize=(8, 10))
 
 console.print("Plotting Spearman correlogram of rain data between pcds")
 plot_spearman_correlogram(sample_rain_df, figsize=(8, 8))
+
+console.print("Plotting mean rain time series")
+plot_mean_rain_time_series(sample_rain_df, figsize=(8, 5))
+
+console.print("Plotting level time series")
+plot_level_time_series(sample_level_df, figsize=(8, 10))
+
+console.print("Plotting Spearman correlogram of level data between pcds")
+plot_spearman_correlogram_level(sample_level_df, figsize=(8, 8))
+
+console.print("Plotting mean level time series")
+plot_mean_level_time_series(sample_level_df, figsize=(8, 5))
+
+console.print("Plotting network params scatter")
+plot_network_scatter(G_params, figsize=(8, 5))
+
+# Maps ---
+
+console.rule("Plotting maps")
