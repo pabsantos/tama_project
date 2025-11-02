@@ -11,6 +11,7 @@ import networkx as nx
 from rich.console import Console
 from network import load_network, calc_params, calc_ebc
 from level_data import load_level_data, calc_daily_level
+from analysis import fill_missing_dates, plot_rain_time_series
 
 # setup ---
 
@@ -97,7 +98,10 @@ console.print("Selecting sample OD zones")
 od_zones_sample = filter_od_zones(od_zones, tti_sample)
 
 console.print("Selecting sample rain data")
-sample_rain_df = filter_rain_data(df_daily_rain, pcd_data)
+sample_rain_df = filter_rain_data(df_daily_rain, pcd_sample)
+
+console.print("Filling missing dates in rain data")
+sample_rain_df = fill_missing_dates(sample_rain_df)
 
 console.print("Selecting sample level data")
 sample_level_df = filter_level_data(df_daily_level, pcd_level)
@@ -120,3 +124,10 @@ console.print("Calculating edge betweenness centrality and converting to gdf")
 
 G_path = "data/G_gdf.gpkg"
 G_gdf = calc_ebc(G, G_path)
+
+# Analysis ---
+
+console.rule("Data Analysis")
+
+console.print("Plotting rain time series")
+plot_rain_time_series(sample_rain_df)

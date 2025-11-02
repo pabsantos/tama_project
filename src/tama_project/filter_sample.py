@@ -1,5 +1,4 @@
 import geopandas as gpd
-import pandas as pd
 
 
 def select_tti_basin(tti_gpd: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
