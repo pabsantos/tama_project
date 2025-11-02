@@ -21,6 +21,7 @@ from analysis import (
     plot_mean_level_time_series,
     plot_network_scatter,
 )
+from maps import plot_study_area_map
 
 # setup ---
 
@@ -94,9 +95,6 @@ tti_sample = select_tti_basin(tti_shapes)
 console.print("Selecting sample PCDs")
 pcd_sample = filter_points(pcd_level, tti_sample)
 
-console.print("Selecting sample level PCDs")
-pcd_level_sample = filter_points(pcd_level, tti_sample)
-
 console.print("Selecting sample flood points")
 sample_flood_points = filter_points(flood_points, tti_sample)
 
@@ -157,3 +155,6 @@ plot_network_scatter(G_params, figsize=(8, 5))
 # Maps ---
 
 console.rule("Plotting maps")
+
+console.print("Plotting study area map")
+plot_study_area_map(tti_sample, od_zones_sample, pcd_sample, figsize=(13, 8))
