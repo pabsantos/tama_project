@@ -8,9 +8,27 @@ from rich.console import Console
 console = Console()
 
 
-def load_network(od_zones_area: gpd.GeoDataFrame):
-    graph_area = od_zones_area.to_crs(4326).make_valid().union_all().buffer(0)
-    return ox.graph_from_polygon(graph_area, network_type="drive")
+def load_network(od_zones_area: gpd.GeoDataFrame, graph_path: str) -> nx.MultiDiGraph:
+    """
+    Load or create a street network graph for the given area.
+
+    Args:
+        od_zones_area: GeoDataFrame with the area to extract the network from
+        graph_path: Path to save/load the graph file
+
+    Returns:
+        NetworkX MultiDiGraph of the street network
+    """
+    if os.path.exists(graph_path):
+        console.print(f"Graph already exists, loading from '{graph_path}'")
+        G = ox.load_graphml(graph_path)
+    else:
+        console.print("Creating network graph from polygon")
+        graph_area = od_zones_area.to_crs(4326).make_valid().union_all().buffer(0)
+        G = ox.graph_from_polygon(graph_area, network_type="drive")
+        console.print(f"Saving graph to '{graph_path}'")
+        ox.save_graphml(G, graph_path)
+    return G
 
 
 def calc_params(G: nx.MultiDiGraph):

@@ -11,7 +11,11 @@ import networkx as nx
 from rich.console import Console
 from network import load_network, calc_params, calc_ebc
 from level_data import load_level_data, calc_daily_level
-from analysis import fill_missing_dates, plot_rain_time_series
+from analysis import (
+    fill_missing_dates,
+    plot_rain_time_series,
+    plot_spearman_correlogram,
+)
 
 # setup ---
 
@@ -111,17 +115,15 @@ sample_level_df = filter_level_data(df_daily_level, pcd_level)
 console.rule("Street network")
 
 console.print("Loading network")
-G = load_network(od_zones_sample)
+graph_path = "data/network.graphml"
+G = load_network(od_zones_sample, graph_path)
 
 console.print("Calculating network stats")
-# console.print(ox.basic_stats(G))
 
 console.print("Calculating network nodes degree and clustering")
 G_params = calc_params(G)
-# console.print(G_params)
 
 console.print("Calculating edge betweenness centrality and converting to gdf")
-
 G_path = "data/G_gdf.gpkg"
 G_gdf = calc_ebc(G, G_path)
 
@@ -130,4 +132,7 @@ G_gdf = calc_ebc(G, G_path)
 console.rule("Data Analysis")
 
 console.print("Plotting rain time series")
-plot_rain_time_series(sample_rain_df)
+plot_rain_time_series(sample_rain_df, figsize=(8, 15))
+
+console.print("Plotting Spearman correlogram of rain data between pcds")
+plot_spearman_correlogram(sample_rain_df, figsize=(10, 8))
