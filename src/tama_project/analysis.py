@@ -9,7 +9,7 @@ def fill_missing_dates(sample_rain_df: pd.DataFrame) -> pd.DataFrame:
     If there are missing dates, inserts the date and sets the value to 0.
 
     Args:
-        sample_rain_df: DataFrame with columns 'codestacao', 'data' and
+        sample_rain_df: DataFrame with columns 'station', 'data' and
             'daily_value'
 
     Returns:
@@ -20,14 +20,14 @@ def fill_missing_dates(sample_rain_df: pd.DataFrame) -> pd.DataFrame:
 
     result_list = []
 
-    for codestacao in df["codestacao"].unique():
-        station_df = df[df["codestacao"] == codestacao].copy()
+    for station in df["station"].unique():
+        station_df = df[df["station"] == station].copy()
         min_date = station_df["data"].min()
         max_date = station_df["data"].max()
         date_range = pd.date_range(start=min_date, end=max_date, freq="D")
         full_dates_df = pd.DataFrame(
             {
-                "codestacao": codestacao,
+                "station": station,
                 "data": date_range,
             }
         )
@@ -39,7 +39,7 @@ def fill_missing_dates(sample_rain_df: pd.DataFrame) -> pd.DataFrame:
         result_list.append(merged_df)
 
     result_df = pd.concat(result_list, ignore_index=True)
-    result_df = result_df.sort_values(["codestacao", "data"]).reset_index(drop=True)
+    result_df = result_df.sort_values(["station", "data"]).reset_index(drop=True)
     return result_df
 
 
@@ -51,14 +51,14 @@ def plot_rain_time_series(
     subplots stacked vertically.
 
     Args:
-        sample_rain_df: DataFrame with columns 'codestacao', 'data' and
+        sample_rain_df: DataFrame with columns 'station', 'data' and
             'daily_value'
         figsize: Figure size tuple (width, height)
     """
     df = sample_rain_df.copy()
     df["data"] = pd.to_datetime(df["data"])
 
-    stations = df["codestacao"].unique()
+    stations = df["station"].unique()
 
     if len(stations) == 0:
         return
@@ -69,15 +69,15 @@ def plot_rain_time_series(
     if n_stations == 1:
         axes = [axes]
 
-    for idx, codestacao in enumerate(stations):
-        station_df = df[df["codestacao"] == codestacao].copy()
+    for idx, station in enumerate(stations):
+        station_df = df[df["station"] == station].copy()
         station_df = station_df.sort_values("data")
         axes[idx].plot(
             station_df["data"],
             station_df["daily_value"],
             linewidth=0.8,
         )
-        axes[idx].set_ylabel(f"{codestacao}")
+        axes[idx].set_ylabel(f"{station}\nDaily Rain (mm)")
         axes[idx].grid(True, alpha=0.3)
         axes[idx].tick_params(axis="x")
 
@@ -95,14 +95,14 @@ def plot_spearman_correlogram(
     Creates a Spearman correlation correlogram comparing different stations.
 
     Args:
-        sample_rain_df: DataFrame with columns 'codestacao', 'data' and
+        sample_rain_df: DataFrame with columns 'station', 'data' and
             'daily_value'
         figsize: Figure size tuple (width, height)
     """
     df = sample_rain_df.copy()
     df["data"] = pd.to_datetime(df["data"])
 
-    pivot_df = df.pivot(index="data", columns="codestacao", values="daily_value")
+    pivot_df = df.pivot(index="data", columns="station", values="daily_value")
 
     corr_matrix = pivot_df.corr(method="spearman")
 

@@ -26,7 +26,7 @@ def filter_od_zones(od_zones, basin_data):
 
 
 def filter_rain_data(rain_data, pcd_sample):
-    return rain_data[rain_data["codestacao"].isin(pcd_sample["codestacao"])]
+    return rain_data[rain_data["station"].isin(pcd_sample["posto"])]
 
 
 def filter_level_data(level_data, pcd_sample):

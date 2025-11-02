@@ -1,4 +1,4 @@
-from rain_data import load_rain_data, create_pcd_data, calc_daily_rain
+from rain_data import load_rain_data, calc_daily_rain
 from filter_sample import (
     select_tti_basin,
     filter_points,
@@ -30,18 +30,15 @@ nxp_config.verbose = 50
 
 console.rule("Loading rain data")
 
+rain_csv_path = "data/rain.csv"
 rain_data_path = "data/rain.parquet"
 daily_rain_data_path = "data/daily_rain.parquet"
-rain_files_path = "data/ped_rain/"
 
 console.print("Loading rain data")
-df_rain = load_rain_data(rain_files_path, rain_data_path)
+df_rain = load_rain_data(rain_csv_path, rain_data_path)
 
 console.print("Calculating daily rain data")
 df_daily_rain = calc_daily_rain(df_rain, daily_rain_data_path)
-
-console.print("Extracting 'pcd_data'")
-pcd_data = create_pcd_data(df_rain)
 
 ## Water level data ---
 
@@ -90,7 +87,7 @@ console.print("Selecting sample microbasins")
 tti_sample = select_tti_basin(tti_shapes)
 
 console.print("Selecting sample PCDs")
-pcd_sample = filter_points(pcd_data, tti_sample)
+pcd_sample = filter_points(pcd_level, tti_sample)
 
 console.print("Selecting sample level PCDs")
 pcd_level_sample = filter_points(pcd_level, tti_sample)
@@ -108,7 +105,7 @@ console.print("Filling missing dates in rain data")
 sample_rain_df = fill_missing_dates(sample_rain_df)
 
 console.print("Selecting sample level data")
-sample_level_df = filter_level_data(df_daily_level, pcd_level)
+sample_level_df = filter_level_data(df_daily_level, pcd_sample)
 
 # Street network ---
 
@@ -132,7 +129,7 @@ G_gdf = calc_ebc(G, G_path)
 console.rule("Data Analysis")
 
 console.print("Plotting rain time series")
-plot_rain_time_series(sample_rain_df, figsize=(8, 15))
+plot_rain_time_series(sample_rain_df, figsize=(8, 10))
 
 console.print("Plotting Spearman correlogram of rain data between pcds")
-plot_spearman_correlogram(sample_rain_df, figsize=(10, 8))
+plot_spearman_correlogram(sample_rain_df, figsize=(8, 8))
