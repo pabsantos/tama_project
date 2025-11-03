@@ -77,7 +77,7 @@ def plot_rain_time_series(
             station_df["daily_value"],
             linewidth=0.8,
         )
-        axes[idx].set_ylabel(f"{station}\nDaily Rain (mm)")
+        axes[idx].set_ylabel(f"{station}\nDaily rainfall (mm)")
         axes[idx].grid(True, alpha=0.3)
         axes[idx].tick_params(axis="x")
 
@@ -145,7 +145,7 @@ def plot_mean_rain_time_series(
 
     ax.plot(mean_rain["data"], mean_rain["daily_value"], linewidth=0.8)
     ax.set_xlabel("Date")
-    ax.set_ylabel("Mean Daily Rain (mm)")
+    ax.set_ylabel("Mean daily rainfall (mm)")
     ax.grid(True, alpha=0.3)
 
     plt.tight_layout()
@@ -256,7 +256,7 @@ def plot_mean_level_time_series(
 
     ax.plot(mean_level["data"], mean_level["daily_value"], linewidth=0.8)
     ax.set_xlabel("Date")
-    ax.set_ylabel("Mean Daily Water Level")
+    ax.set_ylabel("Mean daily water level")
     ax.grid(True, alpha=0.3)
 
     plt.tight_layout()
@@ -285,4 +285,114 @@ def plot_network_scatter(G_params: pd.DataFrame, figsize: tuple = (10, 8)) -> No
 
     plt.tight_layout()
     plt.savefig("plot/network_scatter.png", dpi=300)
+    # plt.show()
+
+
+def calc_level_zscore_mean_series(
+    sample_level_df: pd.DataFrame,
+) -> pd.DataFrame:
+    """
+    Calculates z-scores for river level data separately for each station,
+    and exports a time series with the mean of these z-scores across all
+    stations for each date.
+
+    Args:
+        sample_level_df: DataFrame with columns 'station', 'data' and
+            'daily_value'
+        output_path: Path to save the output parquet file
+
+    Returns:
+        DataFrame with columns 'data' and 'mean_zscore' containing the time
+        series of mean z-scores across all stations
+    """
+    df = sample_level_df.copy()
+    df["data"] = pd.to_datetime(df["data"])
+
+    station_stats = (
+        df.groupby("station")["daily_value"]
+        .agg(["mean", "std"])
+        .reset_index()
+        .rename(columns={"mean": "station_mean", "std": "station_std"})
+    )
+
+    station_stats["station_std"] = station_stats["station_std"].replace(0, 1).fillna(1)
+
+    df = df.merge(station_stats, on="station", how="left")
+
+    df["zscore"] = (df["daily_value"] - df["station_mean"]) / df["station_std"]
+
+    mean_zscore_series = (
+        df.groupby("data")["zscore"]
+        .mean()
+        .reset_index()
+        .rename(columns={"zscore": "mean_zscore"})
+    )
+    mean_zscore_series = mean_zscore_series.sort_values("data").reset_index(drop=True)
+
+    return mean_zscore_series
+
+
+def plot_zscore_mean_time_series(
+    zscore_df: pd.DataFrame, figsize: tuple = (13, 8)
+) -> None:
+    """
+    Plots time series of mean z-score values averaged across all stations.
+
+    Args:
+        zscore_df: DataFrame with columns 'data' and 'mean_zscore'
+        figsize: Figure size tuple (width, height)
+    """
+    df = zscore_df.copy()
+    df["data"] = pd.to_datetime(df["data"])
+    df = df.sort_values("data")
+
+    fig, ax = plt.subplots(figsize=figsize)
+
+    ax.plot(df["data"], df["mean_zscore"], linewidth=0.8)
+    ax.set_xlabel("Date")
+    ax.set_ylabel(r"Mean $z$-score")
+    ax.grid(True, alpha=0.3)
+    ax.axhline(y=0, color="r", linestyle="--", linewidth=0.8, alpha=0.5)
+
+    plt.tight_layout()
+    plt.savefig("plot/zscore_mean_time_series.png", dpi=300)
+    # plt.show()
+
+
+def plot_zscore_rain_correlation(
+    zscore_df: pd.DataFrame,
+    sample_rain_df: pd.DataFrame,
+    figsize: tuple = (10, 8),
+) -> None:
+    """
+    Plots correlation between mean z-score of water level and mean daily rain.
+
+    Args:
+        zscore_df: DataFrame with columns 'data' and 'mean_zscore'
+        sample_rain_df: DataFrame with columns 'station', 'data' and 'daily_value'
+        figsize: Figure size tuple (width, height)
+    """
+    zscore = zscore_df.copy()
+    zscore["data"] = pd.to_datetime(zscore["data"])
+
+    rain = sample_rain_df.copy()
+    rain["data"] = pd.to_datetime(rain["data"])
+    mean_rain = rain.groupby("data")["daily_value"].mean().reset_index()
+    mean_rain = mean_rain.sort_values("data")
+
+    merged = zscore.merge(mean_rain, on="data", how="inner")
+    merged = merged.dropna()
+
+    corr = merged["mean_zscore"].corr(merged["daily_value"], method="spearman")
+
+    fig, ax = plt.subplots(figsize=figsize)
+
+    ax.scatter(merged["daily_value"], merged["mean_zscore"], alpha=0.5, s=20)
+    ax.set_xlabel("Mean daily rainfall (mm)")
+    ax.set_ylabel(r"Mean $z$-Score")
+    ax.grid(True, alpha=0.3)
+    ax.set_title(f"Spearman Correlation: {corr:.3f}")
+
+    plt.tight_layout()
+    plt.savefig("plot/zscore_rain_correlation.png", dpi=300)
     # plt.show()
