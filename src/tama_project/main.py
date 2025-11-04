@@ -24,7 +24,7 @@ from tama_project.analysis import (
     plot_zscore_mean_time_series,
     plot_zscore_rain_correlation,
 )
-from tama_project.maps import plot_study_area_map
+from tama_project.maps import plot_study_area_map, plot_network_flood_map
 
 
 def main() -> None:
@@ -172,6 +172,9 @@ def main() -> None:
 
     console.print("Plotting study area map")
     plot_study_area_map(tti_sample, od_zones_sample, pcd_sample, figsize=(13, 8))
+
+    console.print("Plotting network and flood points map")
+    plot_network_flood_map(G, sample_flood_points, tti_sample, figsize=(13, 8))
 
 
 if __name__ == "__main__":
