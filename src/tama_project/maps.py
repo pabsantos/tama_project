@@ -72,7 +72,7 @@ def plot_study_area_map(
 
     tti_unified_mercator.plot(
         ax=ax,
-        color="lightblue",
+        facecolor="lightblue",
         edgecolor="blue",
         alpha=0.5,
         zorder=2,
