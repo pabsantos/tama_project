@@ -16,6 +16,7 @@ from tama_project.analysis import (
     plot_rain_time_series,
     plot_spearman_correlogram,
     plot_mean_rain_time_series,
+    plot_rain_flood_violin,
     plot_level_time_series,
     plot_spearman_correlogram_level,
     plot_mean_level_time_series,
@@ -23,6 +24,7 @@ from tama_project.analysis import (
     calc_level_zscore_mean_series,
     plot_zscore_mean_time_series,
     plot_zscore_rain_correlation,
+    plot_zscore_flood_violin,
 )
 from tama_project.maps import (
     plot_study_area_map,
@@ -149,6 +151,9 @@ def main() -> None:
     console.print("Plotting mean rain time series")
     plot_mean_rain_time_series(sample_rain_df, figsize=(8, 5))
 
+    console.print("Plotting rain flood violin plot")
+    plot_rain_flood_violin(sample_rain_df, sample_flood_points, figsize=(8, 5))
+
     console.print("Plotting level time series")
     plot_level_time_series(sample_level_df, figsize=(8, 10))
 
@@ -166,6 +171,9 @@ def main() -> None:
 
     console.print("Plotting z-score and rain correlation")
     plot_zscore_rain_correlation(df_level_zscore, sample_rain_df, figsize=(8, 5))
+
+    console.print("Plotting z-score flood violin plot")
+    plot_zscore_flood_violin(df_level_zscore, sample_flood_points, figsize=(8, 5))
 
     console.print("Plotting network params scatter")
     plot_network_scatter(G_params, figsize=(8, 5))

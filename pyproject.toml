@@ -25,5 +25,8 @@ dependencies = [
 [project.scripts]
 tama-project = "tama_project.main:main"
 
+[tool.uv]
+package = true
+
 [tool.setuptools.packages.find]
 where = ["src"]

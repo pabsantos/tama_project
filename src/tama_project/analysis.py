@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from typing import Any
 
 
 def fill_missing_dates(sample_rain_df: pd.DataFrame) -> pd.DataFrame:
@@ -396,3 +397,120 @@ def plot_zscore_rain_correlation(
     plt.tight_layout()
     plt.savefig("plot/zscore_rain_correlation.png", dpi=300)
     # plt.show()
+
+
+def _plot_flood_violin_generic(
+    daily_data_df: pd.DataFrame,
+    value_column: str,
+    sample_flood_points: Any,
+    ylabel: str,
+    output_path: str,
+    figsize: tuple = (10, 8),
+) -> None:
+    """
+    Generic function to plot a violin plot comparing the distribution of a variable
+    between days with flooding and days without flooding.
+
+    Args:
+        daily_data_df: DataFrame with columns 'data' (date) and a value column
+        value_column: Name of the column containing the values to plot
+        sample_flood_points: GeoDataFrame or DataFrame with column 'DATA' containing
+            flood dates in format "dd/mm/yyyy"
+        ylabel: Label for the y-axis
+        output_path: Path to save the plot
+        figsize: Figure size tuple (width, height)
+    """
+    df = daily_data_df.copy()
+    df["data"] = pd.to_datetime(df["data"]).dt.date
+
+    # Extract unique flood dates
+    flood_dates = sample_flood_points["DATA"].dropna().unique()
+    flood_dates_series = pd.Series(flood_dates)
+    flood_dates_dt = pd.to_datetime(flood_dates_series, format="%d/%m/%Y").dt.date
+    flood_dates_set = set(flood_dates_dt)
+
+    # Classify each day
+    df["classificacao"] = df["data"].apply(
+        lambda x: "Days with flooding"
+        if x in flood_dates_set
+        else "Days without flooding"
+    )
+
+    # Prepare data for violin plot
+    plot_df = df[[value_column, "classificacao"]].copy()
+
+    # Create violin plot
+    fig, ax = plt.subplots(figsize=figsize)
+
+    sns.violinplot(
+        data=plot_df,
+        x="classificacao",
+        y=value_column,
+        ax=ax,
+    )
+
+    ax.set_xlabel("")
+    ax.set_ylabel(ylabel)
+    ax.grid(True, alpha=0.3, axis="y")
+
+    plt.tight_layout()
+    plt.savefig(output_path, dpi=300)
+    # plt.show()
+
+
+def plot_rain_flood_violin(
+    sample_rain_df: pd.DataFrame,
+    sample_flood_points: Any,
+    figsize: tuple = (10, 8),
+) -> None:
+    """
+    Plots a violin plot comparing the distribution of mean daily rainfall
+    between days with flooding and days without flooding.
+
+    Args:
+        sample_rain_df: DataFrame with columns 'station', 'data' and 'daily_value'
+        sample_flood_points: GeoDataFrame or DataFrame with column 'DATA' containing
+            flood dates in format "dd/mm/yyyy"
+        figsize: Figure size tuple (width, height)
+    """
+    # Calculate mean daily rain
+    rain = sample_rain_df.copy()
+    rain["data"] = pd.to_datetime(rain["data"])
+    mean_rain = rain.groupby("data")["daily_value"].mean().reset_index()
+
+    _plot_flood_violin_generic(
+        daily_data_df=mean_rain,
+        value_column="daily_value",
+        sample_flood_points=sample_flood_points,
+        ylabel="Mean daily rainfall (mm)",
+        output_path="plot/rain_flood_violin.png",
+        figsize=figsize,
+    )
+
+
+def plot_zscore_flood_violin(
+    zscore_df: pd.DataFrame,
+    sample_flood_points: Any,
+    figsize: tuple = (10, 8),
+) -> None:
+    """
+    Plots a violin plot comparing the distribution of mean z-score of river levels
+    between days with flooding and days without flooding.
+
+    Args:
+        zscore_df: DataFrame with columns 'data' and 'mean_zscore'
+        sample_flood_points: GeoDataFrame or DataFrame with column 'DATA' containing
+            flood dates in format "dd/mm/yyyy"
+        figsize: Figure size tuple (width, height)
+    """
+    df = zscore_df.copy()
+    df["data"] = pd.to_datetime(df["data"])
+
+    _plot_flood_violin_generic(
+        daily_data_df=df,
+        value_column="mean_zscore",
+        sample_flood_points=sample_flood_points,
+        ylabel=r"Mean $z$-score",
+        output_path="plot/zscore_flood_violin.png",
+        figsize=figsize,
+    )
