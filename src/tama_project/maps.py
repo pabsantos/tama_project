@@ -1,6 +1,7 @@
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+import matplotlib.cm as cm
 import contextily as ctx
 import osmnx as ox
 import networkx as nx
@@ -178,11 +179,12 @@ def plot_network_flood_map(
 
     flood_points_mercator.plot(
         ax=ax,
-        color="red",
-        markersize=50,
+        color="blue",
+        markersize=35,
         marker="o",
-        edgecolor="darkred",
+        edgecolor="darkblue",
         linewidth=0.5,
+        alpha=0.6,
         zorder=3,
     )
 
@@ -192,9 +194,10 @@ def plot_network_flood_map(
     flood_patch = mpatches.Circle(
         (0, 0),
         1,
-        facecolor="red",
-        edgecolor="darkred",
+        facecolor="blue",
+        edgecolor="darkblue",
         linewidth=0.5,
+        alpha=0.6,
         label="Flood points",
     )
     handles = [network_patch, flood_patch]
@@ -206,4 +209,83 @@ def plot_network_flood_map(
 
     plt.tight_layout()
     plt.savefig("plot/network_flood_map.png", dpi=300, bbox_inches="tight")
+    # plt.show()
+
+
+def plot_network_ebc_map(
+    G_gdf: gpd.GeoDataFrame,
+    tti_sample: gpd.GeoDataFrame,
+    figsize: tuple = (12, 10),
+) -> None:
+    """
+    Plots a map with the street network graph colored by Edge Betweenness
+    Centrality (EBC) values.
+
+    Args:
+        G_gdf: GeoDataFrame with graph edges and 'ebc' column
+        tti_sample: GeoDataFrame with TTI basin polygons (for bounds)
+        figsize: Figure size tuple (width, height)
+    """
+    fig, ax = plt.subplots(figsize=figsize)
+
+    base_crs = tti_sample.crs
+
+    if tti_sample.crs is None:
+        raise ValueError("tti_sample must have a CRS defined")
+
+    if G_gdf.crs != base_crs:
+        G_gdf = G_gdf.to_crs(base_crs)
+
+    tti_unified = tti_sample.dissolve()
+    tti_unified_mercator = tti_unified.to_crs(epsg=3857)
+    G_gdf_mercator = G_gdf.to_crs(epsg=3857)
+
+    bounds_mercator = tti_unified_mercator.total_bounds
+    margin_x = (bounds_mercator[2] - bounds_mercator[0]) * 0.1
+    margin_y = (bounds_mercator[3] - bounds_mercator[1]) * 0.1
+
+    ax.set_xlim(bounds_mercator[0] - margin_x, bounds_mercator[2] + margin_x)
+    ax.set_ylim(bounds_mercator[1] - margin_y, bounds_mercator[3] + margin_y)
+
+    try:
+        ctx.add_basemap(
+            ax,
+            crs=tti_unified_mercator.crs,
+            source=ctx.providers.CartoDB.DarkMatter,
+            attribution_size=6,
+        )
+    except Exception:
+        pass
+
+    if "ebc" not in G_gdf_mercator.columns:
+        raise ValueError("G_gdf must contain an 'ebc' column")
+
+    ebc_values = G_gdf_mercator["ebc"]
+    vmin = ebc_values.min()
+    vmax = ebc_values.max()
+
+    norm = plt.Normalize(vmin=vmin, vmax=vmax)
+    cmap = plt.get_cmap("plasma")
+
+    G_gdf_mercator.plot(
+        ax=ax,
+        column="ebc",
+        cmap=cmap,
+        linewidth=1.5,
+        alpha=0.8,
+        zorder=2,
+        legend=False,
+    )
+
+    sm = cm.ScalarMappable(norm=norm, cmap=cmap)
+    sm.set_array([])
+    cbar = plt.colorbar(sm, ax=ax, label="Edge Betweenness Centrality")
+    cbar.ax.tick_params(labelsize=9)
+
+    ax.set_xlabel("Longitude")
+    ax.set_ylabel("Latitude")
+    ax.set_aspect("equal")
+
+    plt.tight_layout()
+    plt.savefig("plot/network_ebc_map.png", dpi=300, bbox_inches="tight")
     # plt.show()
