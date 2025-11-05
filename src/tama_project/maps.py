@@ -5,6 +5,78 @@ import matplotlib.cm as cm
 import contextily as ctx
 import osmnx as ox
 import networkx as nx
+from typing import Optional, Tuple
+
+
+def _setup_map_base(
+    tti_sample: gpd.GeoDataFrame,
+    figsize: tuple = (12, 10),
+) -> Tuple[plt.Figure, plt.Axes, gpd.GeoDataFrame]:
+    """
+    Sets up the base map with CRS validation and bounds calculation.
+
+    Returns:
+        Tuple of (fig, ax, tti_unified_mercator)
+    """
+    fig, ax = plt.subplots(figsize=figsize)
+
+    base_crs = tti_sample.crs
+    if base_crs is None:
+        raise ValueError("tti_sample must have a CRS defined")
+
+    tti_unified = tti_sample.dissolve()
+    tti_unified_mercator = tti_unified.to_crs(epsg=3857)
+
+    bounds_mercator = tti_unified_mercator.total_bounds
+    margin_x = (bounds_mercator[2] - bounds_mercator[0]) * 0.1
+    margin_y = (bounds_mercator[3] - bounds_mercator[1]) * 0.1
+
+    ax.set_xlim(bounds_mercator[0] - margin_x, bounds_mercator[2] + margin_x)
+    ax.set_ylim(bounds_mercator[1] - margin_y, bounds_mercator[3] + margin_y)
+
+    return fig, ax, tti_unified_mercator
+
+
+def _ensure_crs_match(
+    gdf: gpd.GeoDataFrame, target_crs: gpd.GeoDataFrame.crs
+) -> gpd.GeoDataFrame:
+    """Ensures GeoDataFrame has the same CRS as target."""
+    if gdf.crs != target_crs:
+        return gdf.to_crs(target_crs)
+    return gdf
+
+
+def _add_basemap_to_ax(
+    ax: plt.Axes,
+    crs: gpd.GeoDataFrame.crs,
+    source,
+    attribution_size: int = 6,
+) -> None:
+    """Adds basemap to axes."""
+    try:
+        ctx.add_basemap(ax, crs=crs, source=source, attribution_size=attribution_size)
+    except Exception:
+        pass
+
+
+def _finish_map(
+    ax: plt.Axes,
+    output_path: str,
+    handles: Optional[list] = None,
+    legend_loc: str = "upper right",
+    dpi: int = 300,
+) -> None:
+    """Finalizes map with labels, legend, and saves."""
+    ax.set_xlabel("Longitude")
+    ax.set_ylabel("Latitude")
+    ax.set_aspect("equal")
+
+    if handles:
+        ax.legend(handles=handles, loc=legend_loc, framealpha=0.9)
+
+    plt.tight_layout()
+    plt.savefig(output_path, dpi=dpi, bbox_inches="tight")
+    # plt.show()
 
 
 def plot_study_area_map(
@@ -26,44 +98,20 @@ def plot_study_area_map(
         pcd_sample: GeoDataFrame with PCD points
         figsize: Figure size tuple (width, height)
     """
-    fig, ax = plt.subplots(figsize=figsize)
+    fig, ax, tti_unified_mercator = _setup_map_base(tti_sample, figsize)
 
     base_crs = tti_sample.crs
+    od_zones_sample = _ensure_crs_match(od_zones_sample, base_crs)
+    pcd_sample = _ensure_crs_match(pcd_sample, base_crs)
 
-    if tti_sample.crs is None:
-        raise ValueError("tti_sample must have a CRS defined")
-
-    if od_zones_sample.crs != base_crs:
-        od_zones_sample = od_zones_sample.to_crs(base_crs)
-
-    if pcd_sample.crs != base_crs:
-        pcd_sample = pcd_sample.to_crs(base_crs)
-
-    tti_unified = tti_sample.dissolve()
     od_zones_sample_valid = od_zones_sample.copy()
     od_zones_sample_valid["geometry"] = od_zones_sample_valid["geometry"].make_valid()
     od_zones_unified = od_zones_sample_valid.dissolve()
 
-    tti_unified_mercator = tti_unified.to_crs(epsg=3857)
     od_zones_unified_mercator = od_zones_unified.to_crs(epsg=3857)
     pcd_sample_mercator = pcd_sample.to_crs(epsg=3857)
 
-    bounds_mercator = tti_unified_mercator.total_bounds
-    margin_x = (bounds_mercator[2] - bounds_mercator[0]) * 0.1
-    margin_y = (bounds_mercator[3] - bounds_mercator[1]) * 0.1
-
-    ax.set_xlim(bounds_mercator[0] - margin_x, bounds_mercator[2] + margin_x)
-    ax.set_ylim(bounds_mercator[1] - margin_y, bounds_mercator[3] + margin_y)
-
-    try:
-        ctx.add_basemap(
-            ax,
-            crs=tti_unified_mercator.crs,
-            source=ctx.providers.CartoDB.Positron,
-            attribution_size=6,
-        )
-    except Exception:
-        pass
+    _add_basemap_to_ax(ax, tti_unified_mercator.crs, ctx.providers.CartoDB.Positron)
 
     od_zones_unified_mercator.plot(
         ax=ax,
@@ -112,18 +160,11 @@ def plot_study_area_map(
         label="Stations",
     )
 
-    ax.set_xlabel("Longitude")
-    ax.set_ylabel("Latitude")
-    ax.set_aspect("equal")
-    ax.legend(
+    _finish_map(
+        ax,
+        "plot/study_area_map.png",
         handles=[od_zones_patch, tti_patch, pcd_patch],
-        loc="upper right",
-        framealpha=0.9,
     )
-
-    plt.tight_layout()
-    plt.savefig("plot/study_area_map.png", dpi=300, bbox_inches="tight")
-    # plt.show()
 
 
 def plot_network_flood_map(
@@ -141,36 +182,14 @@ def plot_network_flood_map(
         tti_sample: GeoDataFrame with TTI basin polygons (for bounds)
         figsize: Figure size tuple (width, height)
     """
-    fig, ax = plt.subplots(figsize=figsize)
+    fig, ax, tti_unified_mercator = _setup_map_base(tti_sample, figsize)
 
     base_crs = tti_sample.crs
+    sample_flood_points = _ensure_crs_match(sample_flood_points, base_crs)
 
-    if tti_sample.crs is None:
-        raise ValueError("tti_sample must have a CRS defined")
-
-    if sample_flood_points.crs != base_crs:
-        sample_flood_points = sample_flood_points.to_crs(base_crs)
-
-    tti_unified = tti_sample.dissolve()
-    tti_unified_mercator = tti_unified.to_crs(epsg=3857)
     flood_points_mercator = sample_flood_points.to_crs(epsg=3857)
 
-    bounds_mercator = tti_unified_mercator.total_bounds
-    margin_x = (bounds_mercator[2] - bounds_mercator[0]) * 0.1
-    margin_y = (bounds_mercator[3] - bounds_mercator[1]) * 0.1
-
-    ax.set_xlim(bounds_mercator[0] - margin_x, bounds_mercator[2] + margin_x)
-    ax.set_ylim(bounds_mercator[1] - margin_y, bounds_mercator[3] + margin_y)
-
-    try:
-        ctx.add_basemap(
-            ax,
-            crs=tti_unified_mercator.crs,
-            source=ctx.providers.CartoDB.Positron,
-            attribution_size=6,
-        )
-    except Exception:
-        pass
+    _add_basemap_to_ax(ax, tti_unified_mercator.crs, ctx.providers.CartoDB.Positron)
 
     G_edges = ox.graph_to_gdfs(G, nodes=False, edges=True)
     G_edges_mercator = G_edges.to_crs(epsg=3857)
@@ -202,14 +221,7 @@ def plot_network_flood_map(
     )
     handles = [network_patch, flood_patch]
 
-    ax.set_xlabel("Longitude")
-    ax.set_ylabel("Latitude")
-    ax.set_aspect("equal")
-    ax.legend(handles=handles, loc="upper right", framealpha=0.9)
-
-    plt.tight_layout()
-    plt.savefig("plot/network_flood_map.png", dpi=300, bbox_inches="tight")
-    # plt.show()
+    _finish_map(ax, "plot/network_flood_map.png", handles=handles)
 
 
 def plot_network_ebc_map(
@@ -226,36 +238,13 @@ def plot_network_ebc_map(
         tti_sample: GeoDataFrame with TTI basin polygons (for bounds)
         figsize: Figure size tuple (width, height)
     """
-    fig, ax = plt.subplots(figsize=figsize)
+    fig, ax, tti_unified_mercator = _setup_map_base(tti_sample, figsize)
 
     base_crs = tti_sample.crs
-
-    if tti_sample.crs is None:
-        raise ValueError("tti_sample must have a CRS defined")
-
-    if G_gdf.crs != base_crs:
-        G_gdf = G_gdf.to_crs(base_crs)
-
-    tti_unified = tti_sample.dissolve()
-    tti_unified_mercator = tti_unified.to_crs(epsg=3857)
+    G_gdf = _ensure_crs_match(G_gdf, base_crs)
     G_gdf_mercator = G_gdf.to_crs(epsg=3857)
 
-    bounds_mercator = tti_unified_mercator.total_bounds
-    margin_x = (bounds_mercator[2] - bounds_mercator[0]) * 0.1
-    margin_y = (bounds_mercator[3] - bounds_mercator[1]) * 0.1
-
-    ax.set_xlim(bounds_mercator[0] - margin_x, bounds_mercator[2] + margin_x)
-    ax.set_ylim(bounds_mercator[1] - margin_y, bounds_mercator[3] + margin_y)
-
-    try:
-        ctx.add_basemap(
-            ax,
-            crs=tti_unified_mercator.crs,
-            source=ctx.providers.CartoDB.DarkMatter,
-            attribution_size=6,
-        )
-    except Exception:
-        pass
+    _add_basemap_to_ax(ax, tti_unified_mercator.crs, ctx.providers.CartoDB.DarkMatter)
 
     if "ebc" not in G_gdf_mercator.columns:
         raise ValueError("G_gdf must contain an 'ebc' column")
@@ -282,10 +271,4 @@ def plot_network_ebc_map(
     cbar = plt.colorbar(sm, ax=ax, label="Edge Betweenness Centrality")
     cbar.ax.tick_params(labelsize=9)
 
-    ax.set_xlabel("Longitude")
-    ax.set_ylabel("Latitude")
-    ax.set_aspect("equal")
-
-    plt.tight_layout()
-    plt.savefig("plot/network_ebc_map.png", dpi=300, bbox_inches="tight")
-    # plt.show()
+    _finish_map(ax, "plot/network_ebc_map.png")
