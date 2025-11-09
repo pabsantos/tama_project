@@ -27,20 +27,44 @@
 
 = Material and methods
 
-// Study scenario: Where and when - Sao Paulo, Tamanduatei microbasins, 2022
+// Study scenario: Where and when - Sao Paulo, Tamanduatei microbasins, 2022, OD zones
 
-- Study scenario: Where and when
+  // Show the study area map
 
-- Data: street graph, rain, floods
+// Data: street graph, rain, floods, pcd stations, level data
 
-- Methods
+  // Show the street network map with flood points
 
-    - Topology analysis
+// Graphs: definition and centrality metrics: degree, clustering, ebc, power law fit
 
-    - Rain and flood correlation / distribution
+// Rainfall: Daily values, correlation between pcds, mean daily values
+
+// Water level data: daily values, correlation between pcds, mean z-score
+
+// Analysis: distribution of rainfall and level data between flood and non-flood days, EBC vs flood count scatter, network EBC and flood highlight map, rainfall and level correlation
 
 = Results
 
+// Graph results: degree x clustering, ebc, power law fit
+
+// Rainfall: correlogram, mean daily values, flood and non-flood days distribution
+
+// Water level data: correlogram, mean daily values, flood and non-flood days distribution
+
+// Rainfall x water level
+
+// Flood x non-flood days distribution
+
+// EBC vs flood count scatter
+
+// Network EBC and flood highlight map 
+
 = Conclusion
+
+// Remember the objectives
+
+// Present the main results
+
+// Whats next? Limitations, perspectives, future work
 
 = Bibliography
