@@ -1,4 +1,5 @@
 import geopandas as gpd
+import pandas as pd
 
 
 def select_tti_basin(tti_gpd: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
@@ -11,6 +12,35 @@ def filter_points(point_data: gpd.GeoDataFrame, basin_data: gpd.GeoDataFrame):
         point_data = point_data.to_crs(basin_data.crs)
     sample_points = gpd.sjoin(point_data, basin_data, predicate="intersects")
     return sample_points[point_data.columns].to_crs("EPSG:4326")
+
+
+def filter_flood_points(
+    flood_points: gpd.GeoDataFrame, basin_data: gpd.GeoDataFrame
+) -> gpd.GeoDataFrame:
+    """
+    Filters flood points by spatial intersection with basin and by date (from 2022 onwards).
+
+    Args:
+        flood_points: GeoDataFrame with flood points containing 'DATA' column
+            in format "dd/mm/yyyy"
+        basin_data: GeoDataFrame with basin polygons
+
+    Returns:
+        Filtered GeoDataFrame with flood points from 2022 onwards
+    """
+    # First apply spatial filter
+    filtered = filter_points(flood_points, basin_data)
+
+    # Then filter by date (from 2022 onwards)
+    if "DATA" in filtered.columns:
+        # Convert dates to datetime for comparison
+        dates = pd.to_datetime(filtered["DATA"], format="%d/%m/%Y", errors="coerce")
+        # Filter dates from 2022-01-01 onwards
+        year_2022_start = pd.Timestamp("2022-01-01")
+        mask = dates >= year_2022_start
+        filtered = filtered[mask].copy()
+
+    return filtered
 
 
 def filter_od_zones(od_zones, basin_data):

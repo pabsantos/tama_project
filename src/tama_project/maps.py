@@ -260,7 +260,7 @@ def plot_network_ebc_map(
         ax=ax,
         column="ebc",
         cmap=cmap,
-        linewidth=1.5,
+        linewidth=0.9,
         alpha=0.8,
         zorder=2,
         legend=False,
@@ -272,3 +272,78 @@ def plot_network_ebc_map(
     cbar.ax.tick_params(labelsize=9)
 
     _finish_map(ax, "plot/network_ebc_map.png")
+
+
+def plot_network_ebc_flood_highlight_map(
+    G_gdf: gpd.GeoDataFrame,
+    tti_sample: gpd.GeoDataFrame,
+    figsize: tuple = (12, 10),
+) -> None:
+    """
+    Plots a map with the street network graph highlighting links with both
+    EBC and flood_count above their respective medians.
+
+    Args:
+        G_gdf: GeoDataFrame with graph edges, 'ebc' and 'flood_count' columns
+        tti_sample: GeoDataFrame with TTI basin polygons (for bounds)
+        figsize: Figure size tuple (width, height)
+    """
+    fig, ax, tti_unified_mercator = _setup_map_base(tti_sample, figsize)
+
+    base_crs = tti_sample.crs
+    G_gdf = _ensure_crs_match(G_gdf, base_crs)
+    G_gdf_mercator = G_gdf.to_crs(epsg=3857)
+
+    if "ebc" not in G_gdf_mercator.columns:
+        raise ValueError("G_gdf must contain an 'ebc' column")
+    if "flood_count" not in G_gdf_mercator.columns:
+        raise ValueError("G_gdf must contain a 'flood_count' column")
+
+    _add_basemap_to_ax(ax, tti_unified_mercator.crs, ctx.providers.CartoDB.DarkMatter)
+
+    ebc_median = G_gdf_mercator["ebc"].median()
+    flood_count_median = G_gdf_mercator["flood_count"].median()
+
+    highlighted_mask = (G_gdf_mercator["ebc"] > ebc_median) & (
+        G_gdf_mercator["flood_count"] > flood_count_median
+    )
+
+    G_gdf_normal = G_gdf_mercator[~highlighted_mask]
+    G_gdf_highlighted = G_gdf_mercator[highlighted_mask]
+
+    G_gdf_normal.plot(
+        ax=ax,
+        color="gray",
+        linewidth=0.5,
+        alpha=0.5,
+        zorder=1,
+        label="Other links",
+    )
+
+    G_gdf_highlighted.plot(
+        ax=ax,
+        color="red",
+        linewidth=2.0,
+        alpha=0.9,
+        zorder=2,
+        label="High EBC & High Flood Count",
+    )
+
+    normal_patch = mpatches.Patch(
+        facecolor="gray",
+        edgecolor="none",
+        alpha=0.5,
+        label="Other links",
+    )
+    highlighted_patch = mpatches.Patch(
+        facecolor="red",
+        edgecolor="none",
+        alpha=0.9,
+        label="High EBC & High Flood Count",
+    )
+
+    _finish_map(
+        ax,
+        "plot/network_ebc_flood_highlight.png",
+        handles=[normal_patch, highlighted_patch],
+    )

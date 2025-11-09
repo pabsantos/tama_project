@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from typing import Any
+import geopandas as gpd
 
 
 def fill_missing_dates(sample_rain_df: pd.DataFrame) -> pd.DataFrame:
@@ -514,3 +515,113 @@ def plot_zscore_flood_violin(
         output_path="plot/zscore_flood_violin.png",
         figsize=figsize,
     )
+
+
+def count_flood_occurrences_by_link(
+    G_gdf: gpd.GeoDataFrame,
+    sample_flood_points: gpd.GeoDataFrame,
+    max_distance: float = None,
+) -> gpd.GeoDataFrame:
+    """
+    Counts the number of flood occurrences for each link (edge) in the graph
+    by finding the nearest link to each flood point.
+
+    Args:
+        G_gdf: GeoDataFrame with graph edges (links) containing geometry column
+        sample_flood_points: GeoDataFrame with flood points containing geometry column
+        max_distance: Maximum distance in meters to consider a flood point associated
+            with a link. If None, all points are assigned to their nearest link.
+            Default is None.
+
+    Returns:
+        GeoDataFrame with added 'flood_count' column containing the number of
+        flood occurrences for each link
+    """
+    G_gdf_result = G_gdf.copy()
+
+    if G_gdf_result.crs != sample_flood_points.crs:
+        sample_flood_points = sample_flood_points.to_crs(G_gdf_result.crs)
+
+    original_crs = G_gdf_result.crs
+    if original_crs is None or original_crs.is_geographic:
+        projected_crs = "EPSG:31983"
+        G_gdf_projected = G_gdf_result.to_crs(projected_crs)
+        flood_points_projected = sample_flood_points.to_crs(projected_crs)
+    else:
+        G_gdf_projected = G_gdf_result.copy()
+        flood_points_projected = sample_flood_points.copy()
+
+    G_gdf_projected = G_gdf_projected.reset_index()
+    original_index_name = G_gdf.index.name if G_gdf.index.name else "index"
+    if original_index_name in G_gdf_projected.columns:
+        G_gdf_projected = G_gdf_projected.rename(
+            columns={original_index_name: "_original_index"}
+        )
+        original_index_col = "_original_index"
+    else:
+        G_gdf_projected = G_gdf_projected.rename(columns={"index": "_original_index"})
+        original_index_col = "_original_index"
+
+    joined = gpd.sjoin_nearest(
+        flood_points_projected,
+        G_gdf_projected,
+        how="inner",
+        max_distance=max_distance,
+        distance_col="distance",
+    )
+
+    if len(joined) > 0:
+        flood_counts = (
+            joined.groupby(joined.index_right).size().reset_index(name="flood_count")
+        )
+        flood_counts = flood_counts.merge(
+            G_gdf_projected[[original_index_col]].reset_index(),
+            left_on="index_right",
+            right_on="index",
+            how="left",
+        )
+        flood_counts = flood_counts[[original_index_col, "flood_count"]].rename(
+            columns={original_index_col: original_index_name}
+        )
+
+        G_gdf_result = G_gdf_result.reset_index().merge(
+            flood_counts,
+            on=original_index_name,
+            how="left",
+        )
+        G_gdf_result["flood_count"] = G_gdf_result["flood_count"].fillna(0).astype(int)
+
+        if original_index_name in G_gdf_result.columns:
+            G_gdf_result = G_gdf_result.set_index(original_index_name)
+    else:
+        G_gdf_result["flood_count"] = 0
+
+    if original_crs != G_gdf_result.crs:
+        G_gdf_result = G_gdf_result.to_crs(original_crs)
+
+    return G_gdf_result
+
+
+def plot_ebc_flood_scatter(G_gdf: gpd.GeoDataFrame, figsize: tuple = (10, 8)) -> None:
+    """
+    Plots a scatter plot of Edge Betweenness Centrality (EBC) vs flood count.
+
+    Args:
+        G_gdf: GeoDataFrame with columns 'ebc' and 'flood_count'
+        figsize: Figure size tuple (width, height)
+    """
+    if "ebc" not in G_gdf.columns:
+        raise ValueError("G_gdf must contain an 'ebc' column")
+    if "flood_count" not in G_gdf.columns:
+        raise ValueError("G_gdf must contain a 'flood_count' column")
+
+    fig, ax = plt.subplots(figsize=figsize)
+
+    ax.scatter(G_gdf["ebc"], G_gdf["flood_count"], alpha=0.5, s=20)
+    ax.set_xlabel("Edge Betweenness Centrality")
+    ax.set_ylabel("Flood count")
+    ax.grid(True, alpha=0.3)
+
+    plt.tight_layout()
+    plt.savefig("plot/ebc_flood_scatter.png", dpi=300)
+    # plt.show()

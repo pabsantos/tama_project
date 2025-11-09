@@ -2,6 +2,7 @@ from tama_project.rain_data import load_rain_data, calc_daily_rain
 from tama_project.filter_sample import (
     select_tti_basin,
     filter_points,
+    filter_flood_points,
     filter_od_zones,
     filter_rain_data,
     filter_level_data,
@@ -25,11 +26,14 @@ from tama_project.analysis import (
     plot_zscore_mean_time_series,
     plot_zscore_rain_correlation,
     plot_zscore_flood_violin,
+    count_flood_occurrences_by_link,
+    plot_ebc_flood_scatter,
 )
 from tama_project.maps import (
     plot_study_area_map,
     plot_network_flood_map,
     plot_network_ebc_map,
+    plot_network_ebc_flood_highlight_map,
 )
 
 
@@ -107,7 +111,7 @@ def main() -> None:
     pcd_sample = filter_points(pcd_level, tti_sample)
 
     console.print("Selecting sample flood points")
-    sample_flood_points = filter_points(flood_points, tti_sample)
+    sample_flood_points = filter_flood_points(flood_points, tti_sample)
 
     console.print("Selecting sample OD zones")
     od_zones_sample = filter_od_zones(od_zones, tti_sample)
@@ -137,6 +141,11 @@ def main() -> None:
     console.print("Calculating edge betweenness centrality and converting to gdf")
     G_path = "data/G_gdf.gpkg"
     G_gdf = calc_ebc(G, G_path)
+
+    console.print("Counting flood occurrences by link")
+    G_gdf = count_flood_occurrences_by_link(G_gdf, sample_flood_points)
+    console.print("Saving G_gdf with flood count to 'data/G_gdf_with_flood_count.gpkg'")
+    G_gdf.to_file("data/G_gdf_with_flood_count.gpkg", driver="GPKG")
 
     # Analysis ---
 
@@ -178,6 +187,9 @@ def main() -> None:
     console.print("Plotting network params scatter")
     plot_network_scatter(G_params, figsize=(8, 5))
 
+    console.print("Plotting EBC vs flood count scatter")
+    plot_ebc_flood_scatter(G_gdf, figsize=(8, 5))
+
     # Maps ---
 
     console.rule("Plotting maps")
@@ -190,6 +202,9 @@ def main() -> None:
 
     console.print("Plotting network EBC map")
     plot_network_ebc_map(G_gdf, tti_sample, figsize=(13, 8))
+
+    console.print("Plotting network EBC and flood highlight map")
+    plot_network_ebc_flood_highlight_map(G_gdf, tti_sample, figsize=(13, 8))
 
 
 if __name__ == "__main__":
