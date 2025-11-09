@@ -144,8 +144,8 @@ def main() -> None:
 
     console.print("Counting flood occurrences by link")
     G_gdf = count_flood_occurrences_by_link(G_gdf, sample_flood_points)
-    console.print("Saving G_gdf with flood count to 'data/G_gdf_with_flood_count.gpkg'")
-    G_gdf.to_file("data/G_gdf_with_flood_count.gpkg", driver="GPKG")
+    # console.print("Saving G_gdf with flood count to 'data/G_gdf_with_flood_count.gpkg'")
+    # G_gdf.to_file("data/G_gdf_with_flood_count.gpkg", driver="GPKG")
 
     # Analysis ---
 

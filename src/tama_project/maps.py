@@ -322,7 +322,7 @@ def plot_network_ebc_flood_highlight_map(
 
     G_gdf_highlighted.plot(
         ax=ax,
-        color="red",
+        color="aqua",
         linewidth=2.0,
         alpha=0.9,
         zorder=2,
@@ -336,7 +336,7 @@ def plot_network_ebc_flood_highlight_map(
         label="Other links",
     )
     highlighted_patch = mpatches.Patch(
-        facecolor="red",
+        facecolor="aqua",
         edgecolor="none",
         alpha=0.9,
         label="High EBC & High Flood Count",

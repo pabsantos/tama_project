@@ -41,12 +41,14 @@ This manuscript is organized as follows: Section 2 describes the study area, dat
 
 // Study scenario: Where and when - Sao Paulo, Tamanduatei microbasins, 2022, OD zones
 
+@fig-area
+
   // Show the study area map
 
 #figure(
   image("plot/study_area_map.png", width: 70%),
   caption: "Study scenario"
-)
+) <fig-area>
 
 // Data: street graph, rain, floods, pcd stations, level data
 
@@ -55,13 +57,12 @@ This manuscript is organized as follows: Section 2 describes the study area, dat
 #figure(
   image("plot/network_flood_map.png", width: 70%),
   caption: "Street network and flood points"
-)
-
+) <fig-flood>
 // Graphs: definition and centrality metrics: degree, clustering, ebc, power law fit
 
-// Rainfall: Daily values, correlation between pcds, mean daily values
+// Rainfall: Daily values, correlation between pcds, mean daily values (how daily values were calculated)
 
-// Water level data: daily values, correlation between pcds, mean z-score
+// Water level data: daily values, correlation between pcds, mean z-score (how daily values were calculated)
 
 // Analysis: distribution of rainfall and level data between flood and non-flood days, EBC vs flood count scatter, network EBC and flood highlight map, rainfall and level correlation
 
@@ -69,29 +70,80 @@ This manuscript is organized as follows: Section 2 describes the study area, dat
 
 = Results
 
-// Graph results: degree x clustering, ebc, power law fit
+== Street network
+
+// Graph results: degree x clustering, ebc
 
 #figure(
   image("plot/network_scatter.png", width: 100%),
   caption: [$k_i$ and $c_i$ network values]
-)
+) <fig-power>
 
 #figure(
   image("plot/network_ebc_map.png", width: 100%),
   caption: "Network EBC results"
-)
+) <fig-ebcmap>
 
-// Rainfall: correlogram, mean daily values, flood and non-flood days distribution
+== Rainfall and river water level
 
-// Water level data: correlogram, mean daily values, flood and non-flood days distribution
+// Rainfall: correlogram, mean daily values
+
+#figure(
+  image("plot/spearman_correlogram.png", width: 70%),
+  caption: "Daily rainfall correlation between stations"
+) <fig-rain-corr>
+
+#figure(
+  image("plot/mean_rain_time_series.png", width: 100%),
+  caption: "Mean daily rainfall values"
+) <fig-rain-mean>
+
+// Water level data: correlogram, mean daily values
+
+#figure(
+  image("plot/spearman_correlogram_level.png", width: 70%),
+  caption: "Daily water level correlation between stations"
+) <fig-level-corr>
+
+#figure(
+  image("plot/zscore_mean_time_series.png", width: 100%),
+  caption: "Mean daily water level values"
+) <fig-level-mean>
 
 // Rainfall x water level
 
+#figure(
+  image("plot/zscore_rain_correlation.png", width: 100%),
+  caption: "Spearman correlation between mean z-score and mean daily rainfall"
+) <fig-zscore-rain-corr>
+
 // Flood x non-flood days distribution
+
+#figure(
+  image("plot/rain_flood_violin.png", width: 100%),
+  caption: "Rainfall x flood x non-flood days distribution"
+) <fig-rain-flood-violin>
+
+#figure(
+  image("plot/zscore_flood_violin.png", width: 100%),
+  caption: "Flood x non-flood days distribution"
+) <fig-flood-violin>
+
+== Network vulnerability
 
 // EBC vs flood count scatter
 
-// Network EBC and flood highlight map 
+#figure(
+  image("plot/ebc_flood_scatter.png", width: 100%),
+  caption: "EBC vs flood count scatter"
+) <fig-ebc-flood-scatter>
+
+// Network EBC and flood highlight map
+
+#figure(
+  image("plot/network_ebc_flood_highlight.png", width: 100%),
+  caption: "Network EBC and flood highlight map"
+) <fig-ebc-flood-highlight-map>
 
 = Conclusion
 
