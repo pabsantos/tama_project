@@ -2,7 +2,7 @@
 
 #show: article.with(
     page-paper: "a4",
-    lang: "en"
+    lang: "en"   
 )
 
 
@@ -13,6 +13,7 @@
 )
 
 #set par(first-line-indent: 0em, spacing: 1.0em)
+#set math.equation(numbering: "(1)")
 
 = Introduction
 
@@ -39,9 +40,13 @@ This manuscript is organized as follows: Section 2 describes the study area, dat
 
 = Material and methods
 
-// Study scenario: Where and when - Sao Paulo, Tamanduatei microbasins, 2022, OD zones
+== Data and study area
 
-@fig-area
+// Study scenario: Where and when - Sao Paulo, Tamanduatei microbasins, 2022, OD zones, pcd stations
+
+The area investigated included parts of the Tamanduateí (TTI) river basin inside the city of São Paulo, which are the following microbasins: _Ribeirão do Oratório_, _Montante do Ribeirão do Oratório_, _Córrego Ourives/Ribeirão dos Couros_, _Ribeirão dos Meninos_, and _Área de Contribuição Direta de Escoamento Difuso - Meninos/Tamanduateí_ (CITATION). Inside this area, 5 stations of data collection (SDC) were considered when collecting rainfall and river level data, with the following IDs: 275, 283, 413 563 and 629 (CITATION). The time period considered in this work ranged from 2022-01 to 2025-04, considering the available data from the respective sources.
+
+To select the street network, a better area division is the origin/destination (OD) zones from the city of São Paulo. These OD zones were developed to count and to manage traffic in the city @metrospPesquisaOrigemDestino2023. Contrary to the TTI microbasins limits, OD zones are ideal to select the street network, avoiding the cut or separation of street blocks when establishing the scenario. All the OD zones that intersected the previous selected TTI microbasins were considered in this work. In total, XX OD zones were considered. The following map in @fig-area shows the considered TTI microbasins, OD zones and SDCs.
 
   // Show the study area map
 
@@ -50,7 +55,9 @@ This manuscript is organized as follows: Section 2 describes the study area, dat
   caption: "Study scenario"
 ) <fig-area>
 
-// Data: street graph, rain, floods, pcd stations, level data
+From the selected OD zones it was possible to load the street network graph using the `osmnx` python package (CITATION). The graph object considered the network from November 2025. The flood occurrence locations were also loaded as point objects, from the DIRECT CITATION. @fig-flood presents the loaded street network and flood locations.
+
+// Data: street graph, rain, floods,  level data
 
   // Show the street network map with flood points
 
@@ -58,15 +65,57 @@ This manuscript is organized as follows: Section 2 describes the study area, dat
   image("plot/network_flood_map.png", width: 70%),
   caption: "Street network and flood points"
 ) <fig-flood>
+
+The street network presented in this work is represented by a graph, where each intersection is a node and each street segment is an edge. Graphs are structures used to model the relations between objects *(Barabási and Pósfai 2016)*. A graph $G$ can be defined as:
+
+$ G = (V, E); $
+
+where $V$ is a set of vertices (or nodes) and $E$ is a set of edges (or links) that connects pairs of nodes (or connects a node to itself).
+
+== Graph analysis
+
 // Graphs: definition and centrality metrics: degree, clustering, ebc, power law fit
+
+Three graph characterization measures were calculated. Two for nodes - degree ($k_i$) and centrality ($c_i$) - and one for edges, the edge betweenness centrality ($?$). The degree of a node $i$, hence $k_i$, is the number of edges connected to that node. This is known as adjacency ($a_(i j)$). When two nodes $i$ and $j$ are said to be neighbors, then $a_(i j) != 0$. The following @eq-ki shows the computation of $k_i$ *(Costa et al. 2007)*:
+
+$ k_i = sum_j a_(i j) $ <eq-ki>
+
+The clustering coefficient ($c_i$) is calculated by the following Equation:
+
+$ c_i = (2L_i)/(k_i (k_i - 1) );  $ <eq-ci>
+
+where $L_i$ is the number of edges between the neighbors of node $i$ and $k_i$ is the degree of node $i$. $c_i$ can vary between 0 and 1.
+
+The edge ($e$) betweenness centrality ($c_B(e)$) is calculated by the sum of the fraction of all-pairs shortest paths that pass through that edge, as the following Equation shows:
+
+$ c_B(e) = sum_(s, t in V) (sigma(s, t | e))/(sigma(s, t));  $ <eq-ebc>
+
+where $V$ is the set of nodes, $sigma (s, t)$ is the number of shortest $(s, t)$-paths, and $sigma(s, t | e)$ is the number of those paths passing through edge $e$ (CITACAO).
+
+== Rainfall and water level data processing
 
 // Rainfall: Daily values, correlation between pcds, mean daily values (how daily values were calculated)
 
+
+Both rainfall and water level values were originally loaded in a 10-minute interval. The rainfall daily values were calculated by summing the values of the 10-minute intervals. The water level daily values were calculated by taking the mean of the values of the 10-minute intervals. Regarding rainfall data similaties between SDCs, the Spearman correlation was calculated. Finally, the mean daily rainfall value was calculated to be used in the flood occurrence analysis.
+
 // Water level data: daily values, correlation between pcds, mean z-score (how daily values were calculated)
+
+The river water level data was also compared between SDCs, using the Spearman correlation. To calculate the mean value of water level, first a $z$-score was calculated for each SDC, using the mean and standard deviation of the daily values. Then, the mean $z$-score of the daily values was calculated and considered in the flood occurrence analysis.
+
+== Flood events
 
 // Analysis: distribution of rainfall and level data between flood and non-flood days, EBC vs flood count scatter, network EBC and flood highlight map, rainfall and level correlation
 
-// Computation methods: packages, repository
+The mean daily rainfall and water level $z$-score mean values were compared between flood and non-flood days, to check if there are visible differences in the distribution of the data between these two groups. Also, a spearman correlation was calculated between the mean daily rainfall and the mean daily water level $z$-score to check if there is a relationship between these two variables.
+
+Regarding vulnerability, the EBC of the street network was compared to the flood count in each edge. Finally, edges with EBC values above the median and with flood count above the median were highlighted in a map, to check which street sections are more vulnerable to flooding. The count of flood occurrences in each edge was calcuted using a nearest spatial join approach, where the nearest edge to each flood point was considered.
+
+== Computational tools
+
+// Computation methods: packages (osmnx, networkx, geopandas), repository, python version
+
+The analysis was performed using the Python programming language, version 3.12.12. The following packages were mainly used: `osmnx` (CITATION), `networkx` (CITATION), and `geopandas` (CITATION). The code was packaged and is available in the following repository: CITATION.
 
 = Results
 
