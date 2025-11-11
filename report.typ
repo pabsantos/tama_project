@@ -123,13 +123,17 @@ The analysis was performed using the Python programming language, version 3.12.1
 
 // Graph results: degree x clustering, ebc
 
+The loaded street network graph has 21,045 nodes and 48,769 edges. @fig-power shows the scatter plot of the degree ($k_i$) and clustering coefficient ($c_i$) of the street network. It is possible to observe that higher values of $k_i$ are followed by lower values of $c_i$, implying that the graph is not purely random.
+
 #figure(
-  image("plot/network_scatter.png", width: 100%),
+  image("plot/network_scatter.png", width: 70%),
   caption: [$k_i$ and $c_i$ network values]
 ) <fig-power>
 
+The map in @fig-ebcmap shows the EBC of the street network. Most of street sections have low EBC values (zero or near zero). Only a few street sections have higher EBC values, indicating that they are more vulnerable to events that impact serviceability.
+
 #figure(
-  image("plot/network_ebc_map.png", width: 100%),
+  image("plot/network_ebc_map.png", width: 80%),
   caption: "Network EBC results"
 ) <fig-ebcmap>
 
@@ -137,44 +141,59 @@ The analysis was performed using the Python programming language, version 3.12.1
 
 // Rainfall: correlogram, mean daily values
 
+The correlogram in @fig-rain-corr shows the Spearman correlation between the daily rainfall values of the different SDCs. It is possible to observe that the correlation is high (> 0.7).
+
 #figure(
   image("plot/spearman_correlogram.png", width: 70%),
   caption: "Daily rainfall correlation between stations"
 ) <fig-rain-corr>
 
+@fig-rain-mean shows the timeseries of the mean daily rainfall values. Most of daily values are 0 mm, and the highest values are around 60 mm.
+
 #figure(
-  image("plot/mean_rain_time_series.png", width: 100%),
+  image("plot/mean_rain_time_series.png", width: 80%),
   caption: "Mean daily rainfall values"
 ) <fig-rain-mean>
 
 // Water level data: correlogram, mean daily values
 
-#figure(
-  image("plot/spearman_correlogram_level.png", width: 70%),
-  caption: "Daily water level correlation between stations"
-) <fig-level-corr>
+@fig-level-corr shows the Spearman correlation between the daily water level values of the different SDCs. It is possible to observe that the correlation is medium, ranging from 0.5 to 0.7.
 
 #figure(
-  image("plot/zscore_mean_time_series.png", width: 100%),
-  caption: "Mean daily water level values"
+  image("plot/spearman_correlogram_level.png", width: 70%),
+  caption: [Daily water level $z$-score correlation between stations]
+) <fig-level-corr>
+
+
+@fig-level-mean shows the timeseries of the mean daily water level $z$-score values. Most of daily values 0 or below 0.
+
+#figure(
+  image("plot/zscore_mean_time_series.png", width: 80%),
+  caption: [Mean daily water level $z$-score values]
 ) <fig-level-mean>
 
 // Rainfall x water level
 
+The spearman correlation between mean daily rainfall and mean daily water level $z$-score is shown in @fig-zscore-rain-corr, with a result of 0.67.
+
 #figure(
-  image("plot/zscore_rain_correlation.png", width: 100%),
+  image("plot/zscore_rain_correlation.png", width: 80%),
   caption: "Spearman correlation between mean z-score and mean daily rainfall"
 ) <fig-zscore-rain-corr>
 
 // Flood x non-flood days distribution
 
+@fig-rain-flood-violin shows the distribution of the mean daily rainfall values between flood and non-flood days. It is possible to observe that the median value in flood days (near 18 mm) is higher than in non-flood days (0 mm).
+
 #figure(
-  image("plot/rain_flood_violin.png", width: 100%),
+  image("plot/rain_flood_violin.png", width: 80%),
   caption: "Rainfall x flood x non-flood days distribution"
 ) <fig-rain-flood-violin>
 
+@fig-flood-violin shows the distribution of the mean daily water level $z$-score values between flood and non-flood days. It is possible to observe that the median value in flood days (near 1) is higher than in non-flood days (near -0.2).
+
 #figure(
-  image("plot/zscore_flood_violin.png", width: 100%),
+  image("plot/zscore_flood_violin.png", width: 80%),
   caption: "Flood x non-flood days distribution"
 ) <fig-flood-violin>
 
@@ -182,15 +201,19 @@ The analysis was performed using the Python programming language, version 3.12.1
 
 // EBC vs flood count scatter
 
+@fig-ebc-flood-scatter presents the scatter plot of the EBC and the flood count in each edge. Most of edges have low EBC values (zero or near zero) and zero flood count. The median flood count is zero and the median EBC is near zero.
+
 #figure(
-  image("plot/ebc_flood_scatter.png", width: 100%),
+  image("plot/ebc_flood_scatter.png", width: 80%),
   caption: "EBC vs flood count scatter"
 ) <fig-ebc-flood-scatter>
 
 // Network EBC and flood highlight map
 
+The map in @fig-ebc-flood-highlight-map shows the street network graph highlighting edges with both EBC and flood count above their respective medians, reaching a total of xxxx edges. It is possible to observe that most of the highlighted edges are located in northern part of the map, some closer to the Tiete river, indicating that these areas are more vulnerable to flooding.
+
 #figure(
-  image("plot/network_ebc_flood_highlight.png", width: 100%),
+  image("plot/network_ebc_flood_highlight.png", width: 80%),
   caption: "Network EBC and flood highlight map"
 ) <fig-ebc-flood-highlight-map>
 

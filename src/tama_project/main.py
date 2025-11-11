@@ -133,8 +133,6 @@ def main() -> None:
     graph_path = "data/network.graphml"
     G = load_network(od_zones_sample, graph_path)
 
-    console.print("Calculating network stats")
-
     console.print("Calculating network nodes degree and clustering")
     G_params = calc_params(G)
 
