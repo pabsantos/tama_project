@@ -15,7 +15,7 @@
 
 - Investigate the vulnerability of urban street network based on topology and the occurrence of floods.
 
-- Explore the relationship between rainfall, river water level, and flood occurrence, as well as the relationship between topological properties and flood occurrence in the studied area.
+- Explore the relationship between rainfall, river stage, and flood occurrence, as well as the relationship between topological properties and flood occurrence in the studied area.
 
 - Identify the most vulnerable street sections. 
 
@@ -37,7 +37,7 @@
 
     - Origin/destination (OD) zones that intersected the TTI river microbasins
 
-    - Five data collection stations, with rainfall and water level data every 10 minutes, between 2022-01 and 2025-04
+    - Five data collection stations, with rainfall and river stage data every 10 minutes, between 2022-01 and 2025-04
   ]
 )
 
@@ -69,7 +69,7 @@ $ c_i = (2L_i)/(k_i (k_i - 1) ) $
 
 $ c_B(e) = sum_(s, t in V) (sigma(s, t | e))/(sigma(s, t)) $
 
-== Floods x rainfall x level
+== Floods x rainfall x river stage
 
 - Rainfall processing: 
   - Calculation of daily values (sum)
@@ -77,10 +77,10 @@ $ c_B(e) = sum_(s, t in V) (sigma(s, t | e))/(sigma(s, t)) $
   - mean daily value between stations, 
   - distribution between flood x non-flood days
 
-- Water level processing: 
+- River stage processing: 
   - Calculation of daily values (mean)
   - Spearman correlation between stations
-  - Mean $z$-score daily values between stations
+  - Mean normalized daily values between stations
   - distribution between flood x non-flood days
 
 == Floods x Vulnerability
@@ -99,25 +99,25 @@ $ c_B(e) = sum_(s, t in V) (sigma(s, t | e))/(sigma(s, t)) $
   image("plot/mean_rain_time_series.png")
 )
 
-== Water level
+// == Water level
 
-#grid(
-  columns: 2,
-  image("plot/spearman_correlogram_level.png"),
-  image("plot/zscore_mean_time_series.png")
-)
+// #grid(
+//   columns: 2,
+//   image("plot/spearman_correlogram_level.png"),
+//   image("plot/zscore_mean_time_series.png")
+// )
 
-== Rainfall x water level
+// == Rainfall x water level
+// #figure(
+//   image("plot/zscore_rain_correlation.png")
+// )
+
+== Rainfall x river level
+
 #figure(
-  image("plot/zscore_rain_correlation.png")
-)
-
-== Rainfall x water level x flood
-
-#grid(
-  columns: 2,
-  image("plot/rain_flood_violin.png"),
-  image("plot/zscore_flood_violin.png")
+  //columns: 2,
+  image("plot/rain_flood_violin.png")
+  // image("plot/zscore_flood_violin.png")
 )
 
 == Node degree and clustering
@@ -135,7 +135,7 @@ $ c_B(e) = sum_(s, t in V) (sigma(s, t | e))/(sigma(s, t)) $
 == EBC x Floods
 
 #figure(
-  image("plot/ebc_flood_scatter.png"),
+  image("plot/ebc_flood_scatter.png")
 ) 
 
 == Vulnerability highlight
