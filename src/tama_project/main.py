@@ -90,6 +90,7 @@ def main() -> None:
 
     console.print(f"Loading OD zones from '{od_zones_path}'")
     od_zones = gpd.read_file(od_zones_path)
+    console.print(f"-> {od_zones.shape[0]} OD zones loaded.")
 
     console.print(f"Loading TTI shapes from '{tti_path}'")
     tti_shapes = gpd.read_file(tti_path)
@@ -115,6 +116,7 @@ def main() -> None:
 
     console.print("Selecting sample OD zones")
     od_zones_sample = filter_od_zones(od_zones, tti_sample)
+    console.print(f"-> {od_zones_sample.shape[0]} OD zones selected.")
 
     console.print("Selecting sample rain data")
     sample_rain_df = filter_rain_data(df_daily_rain, pcd_sample)
