@@ -116,7 +116,10 @@ def main() -> None:
 
     console.print("Selecting sample OD zones")
     od_zones_sample = filter_od_zones(od_zones, tti_sample)
-    console.print(f"-> {od_zones_sample.shape[0]} OD zones selected.")
+    console.print(f"-> {od_zones_sample.shape[0]} OD zones selected")
+    od_zones_sample_path = "data/od_zones_sample.gpkg"
+    od_zones_sample.to_file(od_zones_sample_path, driver="GPKG")
+    console.print(f"-> OD zones sample saved to '{od_zones_sample_path}'")
 
     console.print("Selecting sample rain data")
     sample_rain_df = filter_rain_data(df_daily_rain, pcd_sample)
