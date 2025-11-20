@@ -82,14 +82,13 @@ def _finish_map(
 def plot_study_area_map(
     tti_sample: gpd.GeoDataFrame,
     od_zones_sample: gpd.GeoDataFrame,
-    pcd_sample: gpd.GeoDataFrame,
+    # pcd_sample: gpd.GeoDataFrame,
     figsize: tuple = (12, 10),
 ) -> None:
     """
     Plots a map with the study area showing:
     - Unified TTI basin area (tti_sample dissolved)
     - Unified OD zones area (od_zones_sample dissolved)
-    - PCD points (pcd_sample)
     - CartoDB Positron basemap
 
     Args:
@@ -102,14 +101,14 @@ def plot_study_area_map(
 
     base_crs = tti_sample.crs
     od_zones_sample = _ensure_crs_match(od_zones_sample, base_crs)
-    pcd_sample = _ensure_crs_match(pcd_sample, base_crs)
+    # pcd_sample = _ensure_crs_match(pcd_sample, base_crs)
 
     od_zones_sample_valid = od_zones_sample.copy()
     od_zones_sample_valid["geometry"] = od_zones_sample_valid["geometry"].make_valid()
     od_zones_unified = od_zones_sample_valid.dissolve()
 
     od_zones_unified_mercator = od_zones_unified.to_crs(epsg=3857)
-    pcd_sample_mercator = pcd_sample.to_crs(epsg=3857)
+    # pcd_sample_mercator = pcd_sample.to_crs(epsg=3857)
 
     _add_basemap_to_ax(ax, tti_unified_mercator.crs, ctx.providers.CartoDB.Positron)
 
@@ -129,15 +128,15 @@ def plot_study_area_map(
         zorder=2,
     )
 
-    pcd_sample_mercator.plot(
-        ax=ax,
-        color="red",
-        markersize=30,
-        marker="o",
-        edgecolor="darkred",
-        linewidth=0.5,
-        zorder=3,
-    )
+    # pcd_sample_mercator.plot(
+    #     ax=ax,
+    #     color="red",
+    #     markersize=30,
+    #     marker="o",
+    #     edgecolor="darkred",
+    #     linewidth=0.5,
+    #     zorder=3,
+    # )
 
     od_zones_patch = mpatches.Patch(
         facecolor="lightgreen",
@@ -151,19 +150,19 @@ def plot_study_area_map(
         alpha=0.5,
         label="TTI microbasin",
     )
-    pcd_patch = mpatches.Circle(
-        (0, 0),
-        1,
-        facecolor="red",
-        edgecolor="darkred",
-        linewidth=0.5,
-        label="Stations",
-    )
+    # pcd_patch = mpatches.Circle(
+    #     (0, 0),
+    #     1,
+    #     facecolor="red",
+    #     edgecolor="darkred",
+    #     linewidth=0.5,
+    #     label="Stations",
+    # )
 
     _finish_map(
         ax,
         "plot/study_area_map.png",
-        handles=[od_zones_patch, tti_patch, pcd_patch],
+        handles=[od_zones_patch, tti_patch],
     )
 
 
