@@ -36,6 +36,7 @@ from tama_project.maps import (
     plot_network_ebc_map,
     plot_network_ebc_flood_highlight_map,
 )
+from tama_project.population import load_census_tracts_intersected
 
 
 def main() -> None:
@@ -118,9 +119,9 @@ def main() -> None:
     console.print("Selecting sample OD zones")
     od_zones_sample = filter_od_zones(od_zones, tti_sample)
     console.print(f"-> {od_zones_sample.shape[0]} OD zones selected")
-    od_zones_sample_path = "data/od_zones_sample.gpkg"
-    od_zones_sample.to_file(od_zones_sample_path, driver="GPKG")
-    console.print(f"-> OD zones sample saved to '{od_zones_sample_path}'")
+    # od_zones_sample_path = "data/od_zones_sample.gpkg"
+    # od_zones_sample.to_file(od_zones_sample_path, driver="GPKG")
+    # console.print(f"-> OD zones sample saved to '{od_zones_sample_path}'")
 
     # console.print("Selecting sample rain data")
     # sample_rain_df = filter_rain_data(df_daily_rain, pcd_sample)
@@ -148,8 +149,16 @@ def main() -> None:
 
     console.print("Counting flood occurrences by link")
     G_gdf = count_flood_occurrences_by_link(G_gdf, sample_flood_points)
-    console.print("Saving G_gdf with flood count to 'data/G_gdf_with_flood_count.gpkg'")
-    G_gdf.to_file("data/G_gdf_with_flood_count.gpkg", driver="GPKG")
+    # console.print("Saving G_gdf with flood count to 'data/G_gdf_with_flood_count.gpkg'")
+    # G_gdf.to_file("data/G_gdf_with_flood_count.gpkg", driver="GPKG")
+
+    # Population ---
+
+    console.rule("Population")
+    console.print("Loading population data")
+
+    census_tracts = load_census_tracts_intersected(od_zones_sample)
+    console.print(f"-> {census_tracts.shape[0]} census tracts loaded")
 
     # Analysis ---
 
