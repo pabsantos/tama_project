@@ -1,15 +1,13 @@
 ## Calc issues
 
-- [ ] fix Study scenario map
-    - [ ] remove points 
-    - [ ] Fix legend
+- [x] fix Study scenario map
+    - [x] remove points 
+    - [x] Fix legend
 - [ ] Population
     - [ ] Download aopdata for SP
     - [ ] Select data from study area (intersection)
-    - [ ] Pass pop data to edges (interpolation)
+    - [ ] Pass pop data to nodes (intersection + ???)
 - [ ] Update final dataset (ebc + pop + flood)
-- [ ] Calc k-means
-    - [ ] distribution per group (three violin plots)
 - [ ] Maps
     - [ ] Population per edge
     - [ ] Flood per edge
