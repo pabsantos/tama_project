@@ -346,3 +346,151 @@ def plot_network_ebc_flood_highlight_map(
         "plot/network_ebc_flood_highlight.png",
         handles=[normal_patch, highlighted_patch],
     )
+
+
+def plot_population_map(
+    census_tracts: gpd.GeoDataFrame,
+    tti_sample: gpd.GeoDataFrame,
+    figsize: tuple = (12, 10),
+) -> None:
+    """
+    Plots a map with census tracts colored by population values.
+
+    Args:
+        census_tracts: GeoDataFrame with census tracts and 'v0001' column (population)
+        tti_sample: GeoDataFrame with TTI basin polygons (for bounds)
+        figsize: Figure size tuple (width, height)
+    """
+    fig, ax, tti_unified_mercator = _setup_map_base(tti_sample, figsize)
+
+    base_crs = tti_sample.crs
+    census_tracts = _ensure_crs_match(census_tracts, base_crs)
+    census_tracts_mercator = census_tracts.to_crs(epsg=3857)
+
+    if "v0001" not in census_tracts_mercator.columns:
+        raise ValueError("census_tracts must contain a 'v0001' column")
+
+    _add_basemap_to_ax(ax, tti_unified_mercator.crs, ctx.providers.CartoDB.Positron)
+
+    population_values = census_tracts_mercator["v0001"]
+    vmin = population_values.min()
+    vmax = population_values.max()
+
+    norm = plt.Normalize(vmin=vmin, vmax=vmax)
+    cmap = plt.get_cmap("plasma_r")
+
+    census_tracts_mercator.plot(
+        ax=ax,
+        column="v0001",
+        cmap=cmap,
+        edgecolor="white",
+        linewidth=0.1,
+        alpha=0.7,
+        zorder=2,
+        legend=False,
+    )
+
+    sm = cm.ScalarMappable(norm=norm, cmap=cmap)
+    sm.set_array([])
+    cbar = plt.colorbar(sm, ax=ax, label="Population")
+    cbar.ax.tick_params(labelsize=9)
+
+    _finish_map(ax, "plot/population_map.png")
+
+
+def plot_nodes_population_map(
+    nodes_with_population: gpd.GeoDataFrame,
+    tti_sample: gpd.GeoDataFrame,
+    figsize: tuple = (12, 10),
+) -> None:
+    """
+    Plots a map with graph nodes colored by population values.
+
+    Args:
+        nodes_with_population: GeoDataFrame with graph nodes and 'population' column
+        tti_sample: GeoDataFrame with TTI basin polygons (for bounds)
+        figsize: Figure size tuple (width, height)
+    """
+    fig, ax, tti_unified_mercator = _setup_map_base(tti_sample, figsize)
+
+    base_crs = tti_sample.crs
+    nodes_with_population = _ensure_crs_match(nodes_with_population, base_crs)
+    nodes_mercator = nodes_with_population.to_crs(epsg=3857)
+
+    if "population" not in nodes_mercator.columns:
+        raise ValueError("nodes_with_population must contain a 'population' column")
+
+    _add_basemap_to_ax(ax, tti_unified_mercator.crs, ctx.providers.CartoDB.Positron)
+
+    population_values = nodes_mercator["population"]
+    vmin = population_values.min()
+    vmax = population_values.max()
+
+    norm = plt.Normalize(vmin=vmin, vmax=vmax)
+    cmap = plt.get_cmap("plasma_r")
+
+    nodes_mercator.plot(
+        ax=ax,
+        column="population",
+        cmap=cmap,
+        markersize=3,
+        alpha=0.8,
+        zorder=2,
+        legend=False,
+    )
+
+    sm = cm.ScalarMappable(norm=norm, cmap=cmap)
+    sm.set_array([])
+    cbar = plt.colorbar(sm, ax=ax, label="Population")
+    cbar.ax.tick_params(labelsize=9)
+
+    _finish_map(ax, "plot/nodes_population_map.png")
+
+
+def plot_edges_population_map(
+    G_gdf: gpd.GeoDataFrame,
+    tti_sample: gpd.GeoDataFrame,
+    figsize: tuple = (12, 10),
+) -> None:
+    """
+    Plots a map with the street network edges colored by population values.
+
+    Args:
+        G_gdf: GeoDataFrame with graph edges and 'population' column
+        tti_sample: GeoDataFrame with TTI basin polygons (for bounds)
+        figsize: Figure size tuple (width, height)
+    """
+    fig, ax, tti_unified_mercator = _setup_map_base(tti_sample, figsize)
+
+    base_crs = tti_sample.crs
+    G_gdf = _ensure_crs_match(G_gdf, base_crs)
+    G_gdf_mercator = G_gdf.to_crs(epsg=3857)
+
+    _add_basemap_to_ax(ax, tti_unified_mercator.crs, ctx.providers.CartoDB.Positron)
+
+    if "population" not in G_gdf_mercator.columns:
+        raise ValueError("G_gdf must contain a 'population' column")
+
+    population_values = G_gdf_mercator["population"]
+    vmin = population_values.min()
+    vmax = population_values.max()
+
+    norm = plt.Normalize(vmin=vmin, vmax=vmax)
+    cmap = plt.get_cmap("plasma_r")
+
+    G_gdf_mercator.plot(
+        ax=ax,
+        column="population",
+        cmap=cmap,
+        linewidth=0.9,
+        alpha=0.8,
+        zorder=2,
+        legend=False,
+    )
+
+    sm = cm.ScalarMappable(norm=norm, cmap=cmap)
+    sm.set_array([])
+    cbar = plt.colorbar(sm, ax=ax, label="Population")
+    cbar.ax.tick_params(labelsize=9)
+
+    _finish_map(ax, "plot/edges_population_map.png")

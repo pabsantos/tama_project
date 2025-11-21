@@ -35,8 +35,15 @@ from tama_project.maps import (
     plot_network_flood_map,
     plot_network_ebc_map,
     plot_network_ebc_flood_highlight_map,
+    plot_population_map,
+    plot_nodes_population_map,
+    plot_edges_population_map,
 )
-from tama_project.population import load_census_tracts_intersected
+from tama_project.population import (
+    load_census_tracts_intersected,
+    assign_population_to_nodes,
+    assign_population_to_edges,
+)
 
 
 def main() -> None:
@@ -160,6 +167,14 @@ def main() -> None:
     census_tracts = load_census_tracts_intersected(od_zones_sample)
     console.print(f"-> {census_tracts.shape[0]} census tracts loaded")
 
+    console.print("Assigning population to graph nodes")
+    nodes_with_population = assign_population_to_nodes(G, census_tracts)
+    console.print(f"-> {nodes_with_population.shape[0]} nodes processed")
+
+    console.print("Assigning population to graph edges")
+    G_gdf = assign_population_to_edges(G, nodes_with_population, G_gdf)
+    console.print(f"-> Population assigned to {G_gdf.shape[0]} edges")
+
     # Analysis ---
 
     console.rule("Data Analysis")
@@ -218,6 +233,15 @@ def main() -> None:
 
     console.print("Plotting network EBC and flood highlight map")
     plot_network_ebc_flood_highlight_map(G_gdf, tti_sample, figsize=(13, 8))
+
+    console.print("Plotting population map")
+    plot_population_map(census_tracts, tti_sample, figsize=(13, 8))
+
+    console.print("Plotting nodes population map")
+    plot_nodes_population_map(nodes_with_population, tti_sample, figsize=(13, 8))
+
+    console.print("Plotting edges population map")
+    plot_edges_population_map(G_gdf, tti_sample, figsize=(13, 8))
 
 
 if __name__ == "__main__":

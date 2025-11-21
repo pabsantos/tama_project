@@ -3,14 +3,14 @@
 - [x] fix Study scenario map
     - [x] remove points 
     - [x] Fix legend
-- [ ] Population
-    - [ ] Download aopdata for SP
-    - [ ] Select data from study area (intersection)
-    - [ ] Pass pop data to nodes (intersection + ???)
-- [ ] Update final dataset (ebc + pop + flood)
+- [x] Population
+    - [x] Download Census for SP
+    - [x] Select data from study area (intersection)
+    - [x] Pass pop data to nodes (intersection + ???)
+    - [x] Calc pop data in edges
+- [x] Update final dataset (ebc + pop + flood)
 - [ ] Maps
-    - [ ] Population per edge
+    - [x] Population per edge
     - [ ] Flood per edge
-    - [ ] k-means group per edge
     
  
