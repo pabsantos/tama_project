@@ -290,6 +290,35 @@ def plot_network_scatter(G_params: pd.DataFrame, figsize: tuple = (10, 8)) -> No
     # plt.show()
 
 
+def plot_degree_distribution(G_params: pd.DataFrame, figsize: tuple = (10, 8)) -> None:
+    """
+    Plots a power-law distribution of node degrees P(k_i) versus k_i in log-log scale.
+
+    Args:
+        G_params: DataFrame with columns 'node' and 'k' (degree)
+        figsize: Figure size tuple (width, height)
+    """
+    fig, ax = plt.subplots(figsize=figsize)
+
+    degrees = G_params["k"]
+    n_nodes = len(degrees)
+
+    degree_counts = degrees.value_counts().sort_index()
+    P_k = degree_counts / n_nodes
+
+    ax.scatter(P_k.index, P_k.values, alpha=0.6, s=30)
+    ax.set_xlabel(r"$k_i$")
+    ax.set_ylabel(r"$P(k_i)$")
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+    ax.grid(True, alpha=0.3, which="major")
+    ax.grid(True, alpha=0.1, which="minor")
+
+    plt.tight_layout()
+    plt.savefig("plot/degree_distribution.png", dpi=300)
+    # plt.show()
+
+
 def calc_level_zscore_mean_series(
     sample_level_df: pd.DataFrame,
 ) -> pd.DataFrame:
@@ -604,7 +633,8 @@ def count_flood_occurrences_by_link(
 
 def plot_ebc_flood_scatter(G_gdf: gpd.GeoDataFrame, figsize: tuple = (10, 8)) -> None:
     """
-    Plots a scatter plot of Edge Betweenness Centrality (EBC) vs flood count.
+    Plots a scatter plot of Edge Betweenness Centrality (EBC) vs normalized flood count.
+    The flood count is normalized by the number of edges in each EBC bin (0.01 width).
 
     Args:
         G_gdf: GeoDataFrame with columns 'ebc' and 'flood_count'
@@ -615,13 +645,164 @@ def plot_ebc_flood_scatter(G_gdf: gpd.GeoDataFrame, figsize: tuple = (10, 8)) ->
     if "flood_count" not in G_gdf.columns:
         raise ValueError("G_gdf must contain a 'flood_count' column")
 
+    df = G_gdf[["ebc", "flood_count"]].copy()
+
+    ebc_min = df["ebc"].min()
+    ebc_max = df["ebc"].max()
+
+    bin_width = 0.01
+    bin_edges = pd.interval_range(
+        start=ebc_min,
+        end=ebc_max + bin_width,
+        freq=bin_width,
+        closed="left",
+    )
+    bins = pd.cut(df["ebc"], bins=bin_edges, include_lowest=True)
+
+    df["ebc_bin"] = bins
+
+    normalized = (
+        df.groupby("ebc_bin", observed=True)
+        .agg(
+            {
+                "flood_count": lambda x: x.sum() / len(x) if len(x) > 0 else 0,
+            }
+        )
+        .reset_index()
+    )
+
+    normalized["ebc"] = normalized["ebc_bin"].apply(lambda x: x.mid)
+    normalized = normalized.sort_values("ebc")
+
     fig, ax = plt.subplots(figsize=figsize)
 
-    ax.scatter(G_gdf["ebc"], G_gdf["flood_count"], alpha=0.5, s=20)
+    ax.bar(
+        normalized["ebc"],
+        normalized["flood_count"],
+        width=0.01,
+        alpha=0.7,
+        edgecolor="black",
+        linewidth=0.5,
+    )
     ax.set_xlabel("Edge Betweenness Centrality")
-    ax.set_ylabel("Flood count")
+    ax.set_ylabel("Normalized Flood count")
     ax.grid(True, alpha=0.3)
 
     plt.tight_layout()
     plt.savefig("plot/ebc_flood_scatter.png", dpi=300)
+    # plt.show()
+
+
+def plot_population_histogram(
+    G_gdf: gpd.GeoDataFrame, figsize: tuple = (10, 8)
+) -> None:
+    """
+    Plots a histogram of population distribution per edge.
+
+    Args:
+        G_gdf: GeoDataFrame with 'population' column
+        figsize: Figure size tuple (width, height)
+    """
+    if "population" not in G_gdf.columns:
+        raise ValueError("G_gdf must contain a 'population' column")
+
+    fig, ax = plt.subplots(figsize=figsize)
+
+    ax.hist(G_gdf["population"], bins=20, alpha=0.7, edgecolor="black")
+    ax.set_xlabel("Population")
+    ax.set_ylabel("Frequency")
+    ax.grid(True, alpha=0.3, axis="y")
+
+    plt.tight_layout()
+    plt.savefig("plot/population_histogram.png", dpi=300)
+
+
+def plot_ebc_population_scatter(
+    G_gdf: gpd.GeoDataFrame, figsize: tuple = (10, 8)
+) -> None:
+    """
+    Plots a scatter plot of Edge Betweenness Centrality (EBC) vs normalized population.
+    The population is normalized by the number of edges in each EBC bin (0.01 width).
+
+    Args:
+        G_gdf: GeoDataFrame with columns 'ebc' and 'population'
+        figsize: Figure size tuple (width, height)
+    """
+    if "ebc" not in G_gdf.columns:
+        raise ValueError("G_gdf must contain an 'ebc' column")
+    if "population" not in G_gdf.columns:
+        raise ValueError("G_gdf must contain a 'population' column")
+
+    df = G_gdf[["ebc", "population"]].copy()
+
+    ebc_min = df["ebc"].min()
+    ebc_max = df["ebc"].max()
+
+    bin_width = 0.01
+    bin_edges = pd.interval_range(
+        start=ebc_min,
+        end=ebc_max + bin_width,
+        freq=bin_width,
+        closed="left",
+    )
+    bins = pd.cut(df["ebc"], bins=bin_edges, include_lowest=True)
+
+    df["ebc_bin"] = bins
+
+    normalized = (
+        df.groupby("ebc_bin", observed=True)
+        .agg(
+            {
+                "population": lambda x: x.sum() / len(x) if len(x) > 0 else 0,
+            }
+        )
+        .reset_index()
+    )
+
+    normalized["ebc"] = normalized["ebc_bin"].apply(lambda x: x.mid)
+    normalized = normalized.sort_values("ebc")
+
+    fig, ax = plt.subplots(figsize=figsize)
+
+    ax.bar(
+        normalized["ebc"],
+        normalized["population"],
+        width=0.01,
+        alpha=0.7,
+        edgecolor="black",
+        linewidth=0.5,
+    )
+    ax.set_xlabel("Edge Betweenness Centrality")
+    ax.set_ylabel("Normalized Population")
+    ax.grid(True, alpha=0.3)
+
+    plt.tight_layout()
+    plt.savefig("plot/ebc_population_scatter.png", dpi=300)
+    # plt.show()
+
+
+def plot_population_flood_scatter(
+    G_gdf: gpd.GeoDataFrame, figsize: tuple = (10, 8)
+) -> None:
+    """
+    Plots a scatter plot of population vs flood count per edge.
+
+    Args:
+        G_gdf: GeoDataFrame with columns 'population' and 'flood_count'
+        figsize: Figure size tuple (width, height)
+    """
+    if "population" not in G_gdf.columns:
+        raise ValueError("G_gdf must contain a 'population' column")
+    if "flood_count" not in G_gdf.columns:
+        raise ValueError("G_gdf must contain a 'flood_count' column")
+
+    fig, ax = plt.subplots(figsize=figsize)
+
+    ax.scatter(G_gdf["population"], G_gdf["flood_count"], alpha=0.3, s=20)
+    ax.set_xlabel("Population")
+    ax.set_ylabel("Flood count")
+    ax.grid(True, alpha=0.3)
+
+    plt.tight_layout()
+    plt.savefig("plot/population_flood_scatter.png", dpi=300)
     # plt.show()

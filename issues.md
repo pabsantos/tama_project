@@ -9,8 +9,12 @@
     - [x] Pass pop data to nodes (intersection + ???)
     - [x] Calc pop data in edges
 - [x] Update final dataset (ebc + pop + flood)
-- [ ] Maps
+- [x] Maps
     - [x] Population per edge
-    - [ ] Flood per edge
+- [ ] Plots
+    - [x] Pop per edge distribution
+    - [x] Pop vs. EBC (normalized)
+    - [ ] Pop vs normalized floods
+
     
  

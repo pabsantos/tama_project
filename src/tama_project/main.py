@@ -22,19 +22,23 @@ from tama_project.analysis import (
     # plot_level_time_series,
     # plot_spearman_correlogram_level,
     # plot_mean_level_time_series,
-    plot_network_scatter,
+    # plot_network_scatter,
+    plot_degree_distribution,
     # calc_level_zscore_mean_series,
     # plot_zscore_mean_time_series,
     # plot_zscore_rain_correlation,
     # plot_zscore_flood_violin,
     count_flood_occurrences_by_link,
     plot_ebc_flood_scatter,
+    plot_population_histogram,
+    plot_ebc_population_scatter,
+    plot_population_flood_scatter,
 )
 from tama_project.maps import (
     plot_study_area_map,
     plot_network_flood_map,
     plot_network_ebc_map,
-    plot_network_ebc_flood_highlight_map,
+    # plot_network_ebc_flood_highlight_map,
     plot_population_map,
     plot_nodes_population_map,
     plot_edges_population_map,
@@ -212,11 +216,23 @@ def main() -> None:
     # console.print("Plotting z-score flood violin plot")
     # plot_zscore_flood_violin(df_level_zscore, sample_flood_points, figsize=(8, 5))
 
-    console.print("Plotting network params scatter")
-    plot_network_scatter(G_params, figsize=(8, 5))
+    # console.print("Plotting network params scatter")
+    # plot_network_scatter(G_params, figsize=(8, 5))
+
+    console.print("Plotting degree distribution (power-law)")
+    plot_degree_distribution(G_params, figsize=(8, 5))
 
     console.print("Plotting EBC vs flood count scatter")
     plot_ebc_flood_scatter(G_gdf, figsize=(8, 5))
+
+    console.print("Plotting population histogram")
+    plot_population_histogram(G_gdf, figsize=(8, 5))
+
+    console.print("Plotting EBC vs population scatter")
+    plot_ebc_population_scatter(G_gdf, figsize=(8, 5))
+
+    console.print("Plotting population vs flood count scatter")
+    plot_population_flood_scatter(G_gdf, figsize=(8, 5))
 
     # Maps ---
 
@@ -231,8 +247,8 @@ def main() -> None:
     console.print("Plotting network EBC map")
     plot_network_ebc_map(G_gdf, tti_sample, figsize=(13, 8))
 
-    console.print("Plotting network EBC and flood highlight map")
-    plot_network_ebc_flood_highlight_map(G_gdf, tti_sample, figsize=(13, 8))
+    # console.print("Plotting network EBC and flood highlight map")
+    # plot_network_ebc_flood_highlight_map(G_gdf, tti_sample, figsize=(13, 8))
 
     console.print("Plotting population map")
     plot_population_map(census_tracts, tti_sample, figsize=(13, 8))
