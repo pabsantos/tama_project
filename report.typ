@@ -229,12 +229,12 @@ The loaded road network graph has 21,045 nodes and 48,769 edges. The map in @fig
 
 // Network EBC and flood highlight map
 
-The map in @fig-ebc-flood-highlight-map shows the road network graph highlighting edges with both EBC and flood count above their respective medians, reaching a total of xxxx edges. It is possible to observe that most of the highlighted edges are located in northern part of the map, some closer to the Tiete river, indicating that these areas are more vulnerable to flooding.
+// The map in @fig-ebc-flood-highlight-map shows the road network graph highlighting edges with both EBC and flood count above their respective medians, reaching a total of xxxx edges. It is possible to observe that most of the highlighted edges are located in northern part of the map, some closer to the Tiete river, indicating that these areas are more vulnerable to flooding.
 
-#figure(
-  image("plot/network_ebc_flood_highlight.png", width: 80%),
-  caption: "Network EBC and flood highlight map"
-) <fig-ebc-flood-highlight-map>
+// #figure(
+//   image("plot/network_ebc_flood_highlight.png", width: 80%),
+//   caption: "Network EBC and flood highlight map"
+// ) <fig-ebc-flood-highlight-map>
 
 = Conclusion
 

@@ -48,6 +48,7 @@ from tama_project.population import (
     assign_population_to_nodes,
     assign_population_to_edges,
 )
+from tama_project.render import compile_all
 
 
 def main() -> None:
@@ -258,6 +259,11 @@ def main() -> None:
 
     console.print("Plotting edges population map")
     plot_edges_population_map(G_gdf, tti_sample, figsize=(13, 8))
+
+    # Render ---
+
+    console.rule("Compiling manuscript and slides")
+    compile_all()
 
 
 if __name__ == "__main__":

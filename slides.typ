@@ -3,7 +3,7 @@
 #show: slides.with(
   title: "Vulnerability of urban street networks to floods", // Required
   subtitle: "A case study in São Paulo, Brazil",
-  date: "2025-11-14",
+  date: "2025-12-05",
   authors: ("Pedro Augusto Borges dos Santos"),
   ratio: 16/9,
   toc: false
@@ -37,7 +37,7 @@
 
     - Origin/destination (OD) zones that intersected the TTI river microbasins
 
-    - Five data collection stations, with rainfall and river stage data every 10 minutes, between 2022-01 and 2025-04
+    // - Five data collection stations, with rainfall and river stage data every 10 minutes, between 2022-01 and 2025-04
   ]
 )
 
@@ -61,27 +61,27 @@ Calculation of:
 
 $ k_i = sum_j a_(i j) $
 
-- Node clustering coefficient
+// - Node clustering coefficient
 
-$ c_i = (2L_i)/(k_i (k_i - 1) ) $
+// $ c_i = (2L_i)/(k_i (k_i - 1) ) $
 
 - Edge betweenness centrality (EBC) (vulnerability proxy)
 
 $ c_B(e) = sum_(s, t in V) (sigma(s, t | e))/(sigma(s, t)) $
 
-== Floods x rainfall x river stage
+// == Floods x rainfall x river stage
 
-- Rainfall processing: 
-  - Calculation of daily values (sum)
-  - spearman correlation between stations
-  - mean daily value between stations, 
-  - distribution between flood x non-flood days
+// - Rainfall processing: 
+//   - Calculation of daily values (sum)
+//   - spearman correlation between stations
+//   - mean daily value between stations, 
+//   - distribution between flood x non-flood days
 
-- River stage processing: 
-  - Calculation of daily values (mean)
-  - Spearman correlation between stations
-  - Mean normalized daily values between stations
-  - distribution between flood x non-flood days
+// - River stage processing: 
+//   - Calculation of daily values (mean)
+//   - Spearman correlation between stations
+//   - Mean normalized daily values between stations
+//   - distribution between flood x non-flood days
 
 == Floods x Vulnerability
 
@@ -91,13 +91,13 @@ $ c_B(e) = sum_(s, t in V) (sigma(s, t | e))/(sigma(s, t)) $
 
 = Preliminary results
 
-== Rainfall
+// == Rainfall
 
-#grid(
-  columns: 2,
-  image("plot/spearman_correlogram.png"),
-  image("plot/mean_rain_time_series.png")
-)
+// #grid(
+//   columns: 2,
+//   image("plot/spearman_correlogram.png"),
+//   image("plot/mean_rain_time_series.png")
+// )
 
 // == Water level
 
@@ -112,19 +112,19 @@ $ c_B(e) = sum_(s, t in V) (sigma(s, t | e))/(sigma(s, t)) $
 //   image("plot/zscore_rain_correlation.png")
 // )
 
-== Rainfall x river level
+// == Rainfall x river level
 
-#figure(
-  //columns: 2,
-  image("plot/rain_flood_violin.png")
-  // image("plot/zscore_flood_violin.png")
-)
+// #figure(
+//   columns: 2,
+//   image("plot/rain_flood_violin.png")
+//   image("plot/zscore_flood_violin.png")
+// )
 
-== Node degree and clustering
+// == Node degree and clustering
 
-#figure(
-  image("plot/network_scatter.png")
-)
+// #figure(
+//   image("plot/network_scatter.png")
+// )
 
 == Edge betweenness centrality
 
@@ -138,11 +138,11 @@ $ c_B(e) = sum_(s, t in V) (sigma(s, t | e))/(sigma(s, t)) $
   image("plot/ebc_flood_scatter.png")
 ) 
 
-== Vulnerability highlight
+// == Vulnerability highlight
 
-#figure(
-  image("plot/network_ebc_flood_highlight.png")
-)
+// #figure(
+//   image("plot/network_ebc_flood_highlight.png")
+// )
 
 = Bibliography
 
