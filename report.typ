@@ -118,12 +118,14 @@ The map in @fig-popedge presents the estimated population for all of the 48,769 
 
 == Network vulnerability
 
-@fig-ebc-flood-scatter shows the normalized flood count, which is the flood value divided by the total count of edges in each range of EBC values (size of 0.01), per EBC values. Edges in the range of 0.06 - 0.07 and 0.12 - 0.13 shows the highest values of normalized flood count, which indicates parts of the road network that are more vulnerable to flooding.
+@fig-ebc-flood-scatter shows the normalized flood count, which is the flood value divided by the total count of edges in each range of EBC values (size of 0.01), per EBC values. Edges in the range of 0.06 - 0.07 and 0.12 - 0.13 shows the highest values of normalized flood count, which indicates parts of the road network that are considerablely more vulnerable, compared to other parts of the network.
 
 #figure(
   image("plot/ebc_flood_scatter.png", width: 80%),
   caption: "EBC and normalized flood per edge"
 ) <fig-ebc-flood-scatter>
+
+Finally, @fig-ebc-pop-scatter shows the relation between the normalized population (population value per count of edges in each range of EBC) per EBC values. There is roughly a inverted behavior: edges with higher values of EBC presents lower values of normalized population. 
 
 #figure(
   image("plot/ebc_population_scatter.png", width: 80%),
@@ -132,10 +134,16 @@ The map in @fig-popedge presents the estimated population for all of the 48,769 
 
 = Conclusion
 
-// Remember the objectives
 
-// Present the main results
+In this work, it was possible to analyze the vulnerability of urban roads in São Paulo, considering the area of the city inside parts of the Tamanduateí river basin, based on data of flood events, population and network topology.
+
+Mainly, the results showed that the urban road network distribution of degree values did not follow a power-law behavior. It was observed that only a few road sections showed relative high EBC values, with approximately half of the edges presenting values close to zero.
+
+Some edges with EBC values betwwen 0.06 - 0.07 and 0.12 - 0.13 presented high flood count value, normalized by the quantity of the edges in each EBC range. This indicates locations where the network is more vulnerable, therefore, more impacted by the effects of flooding events. Performing the same comparation to the population data in each edge, it was possible to observe that edges in the lower ranges of EBC presented higher values of normalized population, therefore, roads with higher topological vulnerability are probally impacting less local population.
+
 
 // Whats next? Limitations, perspectives, future work
+
+// Every flood event was interpreted as equal (passable, unpassable); test the vulnerability index; consider traffic flow data, apply graph theory using methods weighted by population, flow and physical distance
 
 #bibliography("refs.bib", style: "apa")

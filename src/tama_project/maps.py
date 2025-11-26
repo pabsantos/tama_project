@@ -150,7 +150,7 @@ def plot_study_area_map(
         facecolor="lightblue",
         edgecolor="blue",
         alpha=0.5,
-        label="TTI microbasin",
+        label="TTI river basin",
     )
     # pcd_patch = mpatches.Circle(
     #     (0, 0),
@@ -209,7 +209,7 @@ def plot_network_flood_map(
     )
 
     network_patch = mpatches.Patch(
-        facecolor="gray", edgecolor="none", alpha=0.7, label="Street network"
+        facecolor="gray", edgecolor="none", alpha=0.7, label="Road network"
     )
     flood_patch = mpatches.Circle(
         (0, 0),
@@ -496,158 +496,3 @@ def plot_edges_population_map(
     cbar.ax.tick_params(labelsize=9)
 
     _finish_map(ax, "plot/edges_population_map.png")
-
-
-def plot_ebc_critical_ranges_map(
-    G_gdf: gpd.GeoDataFrame,
-    tti_sample: gpd.GeoDataFrame,
-    figsize: tuple = (12, 10),
-) -> None:
-    """
-    Plots a map with street network edges colored by normalized flood count
-    calculated per EBC bin (0.01 width). The normalized count is the sum of
-    flood_count divided by the number of edges in each EBC bin.
-
-    Args:
-        G_gdf: GeoDataFrame with graph edges, 'ebc' and 'flood_count' columns
-        tti_sample: GeoDataFrame with TTI basin polygons (for bounds)
-        figsize: Figure size tuple (width, height)
-    """
-    fig, ax, tti_unified_mercator = _setup_map_base(tti_sample, figsize)
-
-    base_crs = tti_sample.crs
-    G_gdf = _ensure_crs_match(G_gdf, base_crs)
-    G_gdf_mercator = G_gdf.to_crs(epsg=3857)
-
-    if "ebc" not in G_gdf_mercator.columns:
-        raise ValueError("G_gdf must contain an 'ebc' column")
-    if "flood_count" not in G_gdf_mercator.columns:
-        raise ValueError("G_gdf must contain a 'flood_count' column")
-
-    _add_basemap_to_ax(ax, tti_unified_mercator.crs, ctx.providers.CartoDB.DarkMatter)
-
-    df = G_gdf_mercator[["ebc", "flood_count"]].copy()
-
-    ebc_min = df["ebc"].min()
-    ebc_max = df["ebc"].max()
-
-    bin_width = 0.01
-    bin_edges = pd.interval_range(
-        start=ebc_min,
-        end=ebc_max + bin_width,
-        freq=bin_width,
-        closed="left",
-    )
-    bins = pd.cut(df["ebc"], bins=bin_edges, include_lowest=True)
-
-    df["ebc_bin"] = bins
-
-    normalized = (
-        df.groupby("ebc_bin", observed=True)
-        .agg(
-            {
-                "flood_count": lambda x: x.sum() / len(x) if len(x) > 0 else 0,
-            }
-        )
-        .reset_index()
-    )
-
-    bin_to_normalized = dict(zip(normalized["ebc_bin"], normalized["flood_count"]))
-
-    G_gdf_mercator["normalized_flood_count"] = (
-        df["ebc_bin"].map(bin_to_normalized).fillna(0)
-    )
-
-    ebc_values = G_gdf_mercator["ebc"]
-    ebc_min_val = ebc_values.min()
-    ebc_max_val = ebc_values.max()
-
-    linewidth_min = 0.3
-    linewidth_max = 3.0
-    if ebc_max_val > ebc_min_val:
-        G_gdf_mercator["linewidth"] = (ebc_values - ebc_min_val) / (
-            ebc_max_val - ebc_min_val
-        ) * (linewidth_max - linewidth_min) + linewidth_min
-    else:
-        G_gdf_mercator["linewidth"] = linewidth_min
-
-    normalized_values = G_gdf_mercator["normalized_flood_count"]
-    vmin = normalized_values.min()
-    vmax = normalized_values.max()
-
-    norm = plt.Normalize(vmin=vmin, vmax=vmax)
-    cmap = plt.get_cmap("plasma")
-
-    for idx, row in G_gdf_mercator.iterrows():
-        geom = row.geometry
-        if geom.geom_type == "LineString":
-            coords = list(geom.coords)
-            if len(coords) >= 2:
-                x_coords = [coord[0] for coord in coords]
-                y_coords = [coord[1] for coord in coords]
-                color = cmap(norm(row["normalized_flood_count"]))
-                ax.plot(
-                    x_coords,
-                    y_coords,
-                    color=color,
-                    linewidth=row["linewidth"],
-                    alpha=0.8,
-                    zorder=2,
-                )
-        elif geom.geom_type == "MultiLineString":
-            for line in geom.geoms:
-                coords = list(line.coords)
-                if len(coords) >= 2:
-                    x_coords = [coord[0] for coord in coords]
-                    y_coords = [coord[1] for coord in coords]
-                    color = cmap(norm(row["normalized_flood_count"]))
-                    ax.plot(
-                        x_coords,
-                        y_coords,
-                        color=color,
-                        linewidth=row["linewidth"],
-                        alpha=0.8,
-                        zorder=2,
-                    )
-
-    sm = cm.ScalarMappable(norm=norm, cmap=cmap)
-    sm.set_array([])
-    cbar = plt.colorbar(sm, ax=ax, label="Normalized Flood Count")
-    cbar.ax.tick_params(labelsize=9)
-
-    legend_ebc_values = [
-        ebc_min_val,
-        ebc_min_val + (ebc_max_val - ebc_min_val) * 0.33,
-        ebc_min_val + (ebc_max_val - ebc_min_val) * 0.67,
-        ebc_max_val,
-    ]
-    legend_linewidths = [
-        (ebc_val - ebc_min_val)
-        / (ebc_max_val - ebc_min_val)
-        * (linewidth_max - linewidth_min)
-        + linewidth_min
-        if ebc_max_val > ebc_min_val
-        else linewidth_min
-        for ebc_val in legend_ebc_values
-    ]
-
-    legend_elements = [
-        Line2D(
-            [0],
-            [0],
-            color="gray",
-            linewidth=lw,
-            label=f"EBC = {ebc_val:.3f}",
-        )
-        for ebc_val, lw in zip(legend_ebc_values, legend_linewidths)
-    ]
-
-    ax.legend(
-        handles=legend_elements,
-        loc="lower right",
-        title="Edge Betweenness Centrality",
-        framealpha=0.9,
-        fontsize=9,
-    )
-
-    _finish_map(ax, "plot/ebc_critical_ranges_map.png")

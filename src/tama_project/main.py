@@ -249,8 +249,8 @@ def main() -> None:
     console.print("Plotting network EBC map")
     plot_network_ebc_map(G_gdf, tti_sample, figsize=(13, 8))
 
-    console.print("Plotting EBC critical ranges map")
-    plot_ebc_critical_ranges_map(G_gdf, tti_sample, figsize=(13, 8))
+    # console.print("Plotting EBC critical ranges map")
+    # plot_ebc_critical_ranges_map(G_gdf, tti_sample, figsize=(13, 8))
 
     # console.print("Plotting network EBC and flood highlight map")
     # plot_network_ebc_flood_highlight_map(G_gdf, tti_sample, figsize=(13, 8))
