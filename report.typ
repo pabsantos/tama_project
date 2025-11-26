@@ -85,12 +85,15 @@ The analysis and most of computational methods were performed using the Python p
 
 == Road network
 
-The loaded road network graph has 21,045 nodes and 48,769 edges. The map in @fig-ebcmap shows the EBC of the road network. Most of road sections have low EBC values (zero or near zero). Only a few road sections have higher EBC values, indicating that they are more vulnerable to events that impact serviceability.
+The loaded road network graph has 21,045 nodes and 48,769 edges. @fig-power shows the probability of node degree per degree value. There is a high probability of degree values between 2 and 6. The values varies between 1 and 10. The network does not stricly follows a power-law behavior.
+
 
 #figure(
   image("plot/degree_distribution.png", width: 80%),
   caption: "Node degree distribution"
 ) <fig-power>
+
+The map in @fig-ebcmap shows the EBC of the road network. Most of road sections have low EBC values (zero or near zero). Only a few road sections have higher EBC values, indicating that they are more vulnerable to events that impact serviceability.
 
 #figure(
   image("plot/network_ebc_map.png", width: 80%),
@@ -99,10 +102,14 @@ The loaded road network graph has 21,045 nodes and 48,769 edges. The map in @fig
 
 == Population
 
+The 7,329 census tracts loaded and selected are presented in @fig-popcensus, with the population value of each area unit. The map shows some urban voids in the study area and some high density areas, with population values above 2.000. In total, the area has a population of 1,679,145 inhabitants.
+
 #figure(
   image("plot/population_map.png", width: 80%),
-  caption: "Population per census tracts"
+  caption: "Population per census tract"
 ) <fig-popcensus>
+
+The map in @fig-popedge presents the estimated population for all of the 48,769 graph edges. Aproximatelly, 95% of the edges have population value below 100. 
 
 #figure(
   image("plot/edges_population_map.png", width: 80%),
@@ -111,7 +118,7 @@ The loaded road network graph has 21,045 nodes and 48,769 edges. The map in @fig
 
 == Network vulnerability
 
-@fig-ebc-flood-scatter presents the scatter plot of the EBC and the flood count in each edge. Most of edges have low EBC values (zero or near zero) and zero flood count. The median flood count is zero and the median EBC is near zero.
+@fig-ebc-flood-scatter shows the normalized flood count, which is the flood value divided by the total count of edges in each range of EBC values (size of 0.01), per EBC values. Edges in the range of 0.06 - 0.07 and 0.12 - 0.13 shows the highest values of normalized flood count, which indicates parts of the road network that are more vulnerable to flooding.
 
 #figure(
   image("plot/ebc_flood_scatter.png", width: 80%),
