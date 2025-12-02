@@ -102,14 +102,14 @@ The map in @fig-ebcmap shows the EBC of the road network. Most road sections hav
 
 == Population
 
-The 7,329 census tracts loaded and selected are presented in @fig-popcensus, showing the population value of each area unit. The map shows some urban voids in the study area and some high-density areas, with population values above 2,000. In total, the area has a population of 1,679,145 inhabitants.
+The 7,329 census tracts loaded and selected are presented in @fig-popcensus, showing the population value of each area unit. The map shows some urban voids in the study area and some high-density areas, with population values above 2,000. In total, the area has a population of 2,803,723 inhabitants.
 
 #figure(
   image("plot/population_map.png", width: 80%),
   caption: "Population per census tract"
 ) <fig-popcensus>
 
-The map in @fig-popedge presents the estimated population for all 48,769 graph edges. Approximately 95% of the edges have population values below 100. 
+The map in @fig-popedge presents the estimated population for all 48,769 graph edges, with a total population of 1,679,145. Approximately 95% of the edges have population values below 100. 
 
 #figure(
   image("plot/edges_population_map.png", width: 80%),

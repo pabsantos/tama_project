@@ -119,7 +119,7 @@ $ P_e(u, v) = P_u/k_u + P_v/k_v $
   columns: 2,
   image("plot/population_map.png"),
   [
-    - 7,329 census tracts, with a total of 1,679,145 inhabitants.
+    - 7,329 census tracts, with a total of 2,803,723 inhabitants.
   ]
 )
 
@@ -129,7 +129,7 @@ $ P_e(u, v) = P_u/k_u + P_v/k_v $
   columns: 2,
   image("plot/edges_population_map.png"),
   [
-    - 7,329 census tracts, with a total of 1,679,145 inhabitants
+    - Edges with a total of 1,679,145 inhabitants
 
     - Approximately 95% of the edges have population values below 100
   ]

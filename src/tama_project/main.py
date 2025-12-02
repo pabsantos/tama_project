@@ -173,6 +173,7 @@ def main() -> None:
 
     census_tracts = load_census_tracts_intersected(od_zones_sample)
     console.print(f"-> {census_tracts.shape[0]} census tracts loaded")
+    console.print(f"-> {census_tracts['v0001'].sum()} population loaded")
 
     console.print("Assigning population to graph nodes")
     nodes_with_population = assign_population_to_nodes(G, census_tracts)
