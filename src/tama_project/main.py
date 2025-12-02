@@ -39,7 +39,7 @@ from tama_project.maps import (
     plot_network_flood_map,
     plot_network_ebc_map,
     # plot_network_ebc_flood_highlight_map,
-    plot_ebc_critical_ranges_map,
+    # plot_ebc_critical_ranges_map,
     plot_population_map,
     plot_nodes_population_map,
     plot_edges_population_map,
@@ -128,6 +128,7 @@ def main() -> None:
 
     console.print("Selecting sample flood points")
     sample_flood_points = filter_flood_points(flood_points, tti_sample)
+    console.print(f"-> {sample_flood_points.shape[0]} flood points selected")
 
     console.print("Selecting sample OD zones")
     od_zones_sample = filter_od_zones(od_zones, tti_sample)

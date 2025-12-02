@@ -141,11 +141,6 @@ Mainly, the results showed that the urban road network distribution of degree va
 
 Some edges with EBC values between 0.06-0.07 and 0.12-0.13 presented high flood count values, normalized by the quantity of edges in each EBC range. This indicates locations where the network is more vulnerable and, therefore, more impacted by the effects of flooding events. Performing the same comparison with the population data for each edge, it was possible to observe that edges in the lower ranges of EBC presented higher values of normalized population. Therefore, roads with higher topological vulnerability are probably impacting less local population.
 
-
-// Whats next? Limitations, perspectives, future work
-
-// Every flood event was interpreted as equal (passable, unpassable); test the vulnerability index; consider traffic flow data, apply graph theory using methods weighted by population, flow and physical distance
-
 Every flood event was considered as of equal impact on the network, but the original data has an attribute that indicates the level of severity (passable or unpassable flood event) that was not considered in this work. Also, future work should apply a vulnerability index to better assess the vulnerability of the network. Adding new exposure data, like traffic flow, and applying graph theory methods weighted by population, flow and physical distance could improve the precision of the analysis.
 
 #bibliography("refs.bib", style: "apa")
