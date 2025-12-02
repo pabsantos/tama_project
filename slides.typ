@@ -13,7 +13,7 @@
 
 == Objectives
 
-- Assess the vulnerability of urban road network based on topology and the occurrence of floods.
+- Assess the vulnerability of urban road networks based on topology and the occurrence of floods.
 
 - Explore the relationship between topological properties, flood occurrence, and population distribution in the studied area.
 
@@ -21,7 +21,7 @@
 
 - Not all road sections in a network are equally critical to its functioning, since some have a greater impact on network flows than others.
 
-- Studying and analyzing the vulnerability of road networks helps in prioritizing planning, budgeting, and maintenance, as well as preparing effective emergency response plans @balijepalliMeasuringVulnerabilityRoad2014.
+- Studying and analyzing the vulnerability of road networks helps prioritize planning, budgeting, and maintenance, as well as prepare effective emergency response plans @balijepalliMeasuringVulnerabilityRoad2014.
 
 - Vulnerability: the degree to which a road network is susceptible to performance degradation and user impact when exposed to adverse events.
 
@@ -45,7 +45,7 @@
 
       - Área de Contribuição Direta de Escoamento Difuso - Meninos/Tamanduateí 
 
-    - Origin/destination (OD) zones that intersected the TTI basin parts: 92 zones, from a total of 527 @metrospPesquisaOrigemDestino2023.
+    - Origin/destination (OD) zones that intersected the TTI basin parts: 92 zones out of a total of 527 @metrospPesquisaOrigemDestino2023.
   ]
 )
 
@@ -57,7 +57,7 @@
   [
     - Road network from 2025-11 @boeingModelingAnalyzingUrban2025
 
-    - Flood points between 2022-01 and 2025-04: 556 flood events @cge-spAlagamentos2025.
+    - Flood points between 2022-01 and 2025-04: 556 flood events @cge-spAlagamentos2025
 
     - Spatial proximity join to edges
   ]
@@ -90,7 +90,7 @@ $ c_B(e) = sum_(s, t in V) (sigma(s, t | e))/(sigma(s, t)) $
 
 - Population is equally divided among each node $i$ within the same census tract
 
-- For each edge $e$ between nodes $u, v$, the population ($P_e(u, v)$) was calculated as the sum of the population of node $u$ ($P_u$) divided by its degree ($k_u$) plus the population of node $v$ ($P_v$) divided by its degree ($k_v$)
+- For each edge $e$ between nodes $(u, v)$, the population ($P_e(u, v)$) was calculated as the sum of the population of node $u$ ($P_u$) divided by its degree ($k_u$) plus the population of node $v$ ($P_v$) divided by its degree ($k_v$)
 
 $ P_e(u, v) = P_u/k_u + P_v/k_v $ 
 
@@ -129,9 +129,9 @@ $ P_e(u, v) = P_u/k_u + P_v/k_v $
   columns: 2,
   image("plot/edges_population_map.png"),
   [
-    - 7,329 census tracts, with a total of 1,679,145 inhabitants.
+    - 7,329 census tracts, with a total of 1,679,145 inhabitants
 
-    -  Approximately 95% of the edges have population values below 100
+    - Approximately 95% of the edges have population values below 100
   ]
 )
 
@@ -141,8 +141,7 @@ $ P_e(u, v) = P_u/k_u + P_v/k_v $
 
 - Flood value divided by the total count of edges in each range of EBC values (bin size of 0.01)
 
-- Edges in the ranges of 0.06-0.07 and 0.12-0.13 show the highest values of normalized flood count.
-  
+- Edges in the ranges of 0.06-0.07 and 0.12-0.13 show the highest values of normalized flood count
 
 #figure(
   image("plot/ebc_flood_scatter.png", width: 60%)
@@ -152,7 +151,7 @@ $ P_e(u, v) = P_u/k_u + P_v/k_v $
 
 - Population divided by the total count of edges in each range of EBC values (bin size of 0.01)
 
-- There is roughly an inverted relationship: edges with higher EBC values present lower values of normalized population. 
+- There is roughly an inverted relationship: edges with higher EBC values present lower values of normalized population
 
 #figure(
   image("plot/ebc_population_scatter.png", width: 55%)
@@ -164,7 +163,7 @@ $ P_e(u, v) = P_u/k_u + P_v/k_v $
 
 - Edges in the lower ranges of EBC presented higher values of normalized population
 
-- Parts of the network are more vulnerable regarding topology and flood events, impacting the overall performance
+- Parts of the network are more vulnerable regarding topology and flood events, impacting overall performance
 
 - Next steps: vulnerability index, new exposure data (traffic flow), weighted graph analysis by population, flow and physical distance
 
