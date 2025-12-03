@@ -70,7 +70,7 @@ def assign_population_to_nodes(
     Assigns population values from census tracts to graph nodes.
 
     The population of each census tract is divided equally among all nodes
-    that fall within that tract.
+    that intersect that tract.
 
     Args:
         G: NetworkX MultiDiGraph of the street network
@@ -95,7 +95,7 @@ def assign_population_to_nodes(
     nodes_with_tracts = gpd.sjoin(
         G_nodes,
         census_tracts_with_id,
-        predicate="within",
+        predicate="intersects",
         how="left",
     )
 
@@ -106,6 +106,8 @@ def assign_population_to_nodes(
         "Calculating population per node (dividing equally within each tract)"
     )
 
+    nodes_with_tracts = nodes_with_tracts.dropna(subset=["tract_id"])
+
     tract_node_counts = nodes_with_tracts.groupby("tract_id").size()
 
     nodes_with_tracts["tract_node_count"] = nodes_with_tracts["tract_id"].map(
@@ -115,16 +117,22 @@ def assign_population_to_nodes(
         nodes_with_tracts["v0001"] / nodes_with_tracts["tract_node_count"]
     )
 
-    nodes_with_tracts["population"] = nodes_with_tracts["population"].fillna(0)
-
     node_columns = G_nodes.columns.tolist()
-    result = nodes_with_tracts[node_columns + ["population"]].copy()
 
-    if result.index.duplicated().any():
+    if nodes_with_tracts.index.duplicated().any():
+        duplicated_count = nodes_with_tracts.index.duplicated().sum()
         console.print(
-            "Warning: Some nodes appear in multiple tracts, keeping first occurrence"
+            f"Warning: {duplicated_count} node occurrences appear in multiple tracts"
         )
-        result = result[~result.index.duplicated(keep="first")]
+        console.print("Summing population from all intersecting tracts for each node")
+        node_population_sum = nodes_with_tracts.groupby(nodes_with_tracts.index)[
+            "population"
+        ].sum()
+        result = G_nodes.copy()
+        result["population"] = result.index.map(node_population_sum).fillna(0)
+    else:
+        result = nodes_with_tracts[node_columns + ["population"]].copy()
+        result["population"] = result["population"].fillna(0)
 
     total_population = result["population"].sum()
     console.print(f"-> Total population assigned to nodes: {total_population:.0f}")

@@ -109,7 +109,7 @@ The 7,329 census tracts loaded and selected are presented in @fig-popcensus, sho
   caption: "Population per census tract"
 ) <fig-popcensus>
 
-The map in @fig-popedge presents the estimated population for all 48,769 graph edges, with a total population of 1,679,145. Approximately 95% of the edges have population values below 100. 
+The map in @fig-popedge presents the estimated population for all 48,769 graph edges, with a total population of 2,137,552. Approximately 95% of the edges have population values below 100. 
 
 #figure(
   image("plot/edges_population_map.png", width: 80%),

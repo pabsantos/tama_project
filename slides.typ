@@ -129,7 +129,7 @@ $ P_e(u, v) = P_u/k_u + P_v/k_v $
   columns: 2,
   image("plot/edges_population_map.png"),
   [
-    - Edges with a total of 1,679,145 inhabitants
+    - Edges with a total of 2,137,552 inhabitants
 
     - Approximately 95% of the edges have population values below 100
   ]
