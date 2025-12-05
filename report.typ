@@ -125,7 +125,7 @@ The map in @fig-popedge presents the estimated population for all 48,769 graph e
   caption: "EBC and normalized flood per edge"
 ) <fig-ebc-flood-scatter>
 
-Finally, @fig-ebc-pop-scatter shows the relationship between the normalized population (population value per count of edges in each range of EBC) and EBC values. There is roughly an inverted relationship: edges with higher EBC values present lower values of normalized population. 
+Finally, @fig-ebc-pop-scatter shows the relationship between the normalized population (population value per count of edges in each range of EBC) and EBC values. There is little variation in normalized population across EBC ranges, except for ranges around 0.08, which showed higher values, and around 0.16, which showed lower values. 
 
 #figure(
   image("plot/ebc_population_scatter.png", width: 80%),
@@ -139,7 +139,7 @@ In this work, it was possible to analyze the vulnerability of urban roads in Sã
 
 Mainly, the results showed that the urban road network distribution of degree values did not follow a power-law behavior. It was observed that only a few road sections showed relatively high EBC values, with approximately half of the edges presenting values close to zero.
 
-Some edges with EBC values between 0.06-0.07 and 0.12-0.13 presented high flood count values, normalized by the quantity of edges in each EBC range. This indicates locations where the network is more vulnerable and, therefore, more impacted by the effects of flooding events. Performing the same comparison with the population data for each edge, it was possible to observe that edges in the lower ranges of EBC presented higher values of normalized population. Therefore, roads with higher topological vulnerability are probably impacting less local population.
+Some edges with EBC values between 0.06-0.07 and 0.12-0.13 presented high flood count values, normalized by the quantity of edges in each EBC range. This indicates locations where the network is more vulnerable and, therefore, more impacted by the effects of flooding events. Performing the same comparison with the population data for each edge, it was possible to observe that there is little variation in normalized population across EBC ranges, with exceptions at ranges around 0.08 (higher values) and 0.16 (lower values). This suggests that topological vulnerability does not show a clear relationship with population distribution across most of the network, and that are some more critical locations regarding exposure.
 
 Every flood event was considered as of equal impact on the network, but the original data has an attribute that indicates the level of severity (passable or unpassable flood event) that was not considered in this work. Also, future work should apply a vulnerability index to better assess the vulnerability of the network. Adding new exposure data, like traffic flow, and applying graph theory methods weighted by population, flow and physical distance could improve the precision of the analysis.
 

@@ -151,7 +151,7 @@ $ P_e(u, v) = P_u/k_u + P_v/k_v $
 
 - Population divided by the total count of edges in each range of EBC values (bin size of 0.01)
 
-- There is roughly an inverted relationship: edges with higher EBC values present lower values of normalized population
+- There is little variation in normalized population across EBC ranges, except for ranges around 0.08, which showed higher values, and around 0.16, which showed lower values. 
 
 #figure(
   image("plot/ebc_population_scatter.png", width: 55%)
@@ -161,9 +161,11 @@ $ P_e(u, v) = P_u/k_u + P_v/k_v $
 
 == Conclusion
 
-- Edges in the lower ranges of EBC presented higher values of normalized population
+- Topological vulnerability does not show a clear relationship with population distribution across most of the network.
 
-- Parts of the network are more vulnerable regarding topology and flood events, impacting overall performance
+- Some critical locations regarding exposure (population) and cause (flooding) were detected.
+
+- Parts of the network are more vulnerable regarding topology and flood events, impacting overall performance.
 
 - Next steps: vulnerability index, new exposure data (traffic flow), weighted graph analysis by population, flow and physical distance
 
