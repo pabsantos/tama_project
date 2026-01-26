@@ -211,3 +211,6 @@ data/water_level.csv
 data/level.csv
 data/rain.csv
 plot/
+
+.claude/
+CLAUDE.md
