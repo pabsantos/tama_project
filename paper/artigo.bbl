@@ -1,0 +1,367 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global/global}
+    \entry{Boldrini}{book}{}{}
+      \name{author}{4}{}{%
+        {{hash=a0fcbc6727564dcd412079a118c795fd}{%
+           family={Boldrini},
+           familyi={B\bibinitperiod},
+           given={J.\bibnamedelimi L.},
+           giveni={J\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+        {{hash=a9345de758c99f8a6503b3725ff3caf8}{%
+           family={Costa},
+           familyi={C\bibinitperiod},
+           given={S.\bibnamedelimi I.\bibnamedelimi R.},
+           giveni={S\bibinitperiod\bibinitdelim I\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+        {{hash=53e81a8f0041794fbd78400af0b94404}{%
+           family={Figueiredo},
+           familyi={F\bibinitperiod},
+           given={V.\bibnamedelimi L.},
+           giveni={V\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+        {{hash=2b2d9bea2fc40f9005c6116e14cd5f11}{%
+           family={Wetzler},
+           familyi={W\bibinitperiod},
+           given={H.\bibnamedelimi G.},
+           giveni={H\bibinitperiod\bibinitdelim G\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {São Paulo}%
+      }
+      \list{publisher}{1}{%
+        {Harbra}%
+      }
+      \strng{namehash}{abdc69549e5099c5101cab76847ed286}
+      \strng{fullhash}{abdc69549e5099c5101cab76847ed286}
+      \strng{fullhashraw}{abdc69549e5099c5101cab76847ed286}
+      \strng{bibnamehash}{abdc69549e5099c5101cab76847ed286}
+      \strng{authorbibnamehash}{abdc69549e5099c5101cab76847ed286}
+      \strng{authornamehash}{abdc69549e5099c5101cab76847ed286}
+      \strng{authorfullhash}{abdc69549e5099c5101cab76847ed286}
+      \strng{authorfullhashraw}{abdc69549e5099c5101cab76847ed286}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{3a. ed.}
+      \field{isbn}{9788529402024}
+      \field{title}{Álgebra Linear}
+      \field{year}{1986}
+    \endentry
+    \entry{Contiero}{article}{}{}
+      \name{author}{4}{}{%
+        {{hash=a053f7cf59ab4e64936cabac5ffa794a}{%
+           family={Contiero},
+           familyi={C\bibinitperiod},
+           given={L.\bibnamedelimi O.},
+           giveni={L\bibinitperiod\bibinitdelim O\bibinitperiod}}}%
+        {{hash=48fbe900b4de6224100cd5323d1288ed}{%
+           family={Hoppen},
+           familyi={H\bibinitperiod},
+           given={C.},
+           giveni={C\bibinitperiod}}}%
+        {{hash=c5118b41eef9129bb895d9adf0123a38}{%
+           family={Lefmann},
+           familyi={L\bibinitperiod},
+           given={H.},
+           giveni={H\bibinitperiod}}}%
+        {{hash=cc25a9875bdc93051c5e3fe161ed5f94}{%
+           family={Odermann},
+           familyi={O\bibinitperiod},
+           given={K},
+           giveni={K\bibinitperiod}}}%
+      }
+      \strng{namehash}{876c6904aa8a040725b210eedaa7f3bb}
+      \strng{fullhash}{876c6904aa8a040725b210eedaa7f3bb}
+      \strng{fullhashraw}{876c6904aa8a040725b210eedaa7f3bb}
+      \strng{bibnamehash}{876c6904aa8a040725b210eedaa7f3bb}
+      \strng{authorbibnamehash}{876c6904aa8a040725b210eedaa7f3bb}
+      \strng{authornamehash}{876c6904aa8a040725b210eedaa7f3bb}
+      \strng{authorfullhash}{876c6904aa8a040725b210eedaa7f3bb}
+      \strng{authorfullhashraw}{876c6904aa8a040725b210eedaa7f3bb}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{SIAM Journal on Discrete Mathematics}
+      \field{note}{Aceito}
+      \field{title}{Rainbow {E}rdös--{R}othschild Problem for the Fano Plane}
+      \field{year}{2021}
+      \verb{doi}
+      \verb 10.1137/20M136325X
+      \endverb
+    \endentry
+    \entry{Cuminato}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=82c05f1467a83d0b4dbcde357bd00de5}{%
+           family={Cuminato},
+           familyi={C\bibinitperiod},
+           given={J.\bibnamedelimi A.},
+           giveni={J\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=10e5feb4159014891a6e1ee2887049b4}{%
+           family={Ruas},
+           familyi={R\bibinitperiod},
+           given={V.},
+           giveni={V\bibinitperiod}}}%
+      }
+      \strng{namehash}{d8c5d71e66e2e6ba52cc2646ff6b3de8}
+      \strng{fullhash}{d8c5d71e66e2e6ba52cc2646ff6b3de8}
+      \strng{fullhashraw}{d8c5d71e66e2e6ba52cc2646ff6b3de8}
+      \strng{bibnamehash}{d8c5d71e66e2e6ba52cc2646ff6b3de8}
+      \strng{authorbibnamehash}{d8c5d71e66e2e6ba52cc2646ff6b3de8}
+      \strng{authornamehash}{d8c5d71e66e2e6ba52cc2646ff6b3de8}
+      \strng{authorfullhash}{d8c5d71e66e2e6ba52cc2646ff6b3de8}
+      \strng{authorfullhashraw}{d8c5d71e66e2e6ba52cc2646ff6b3de8}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Computational and Applied Mathematics}
+      \field{number}{34}
+      \field{title}{Unification of distance inequalities for linear variational problems}
+      \field{year}{2014}
+      \field{pages}{1009\bibrangedash 1033}
+      \range{pages}{25}
+      \verb{doi}
+      \verb 10.1007/s40314-014-0163-6
+      \endverb
+    \endentry
+    \entry{Diniz}{thesis}{}{}
+      \name{author}{1}{}{%
+        {{hash=1fab4ac7cec16c357b4edcc36cc7073f}{%
+           family={Diniz},
+           familyi={D\bibinitperiod},
+           given={G.\bibnamedelimi L.},
+           giveni={G\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {Unicamp}%
+      }
+      \strng{namehash}{1fab4ac7cec16c357b4edcc36cc7073f}
+      \strng{fullhash}{1fab4ac7cec16c357b4edcc36cc7073f}
+      \strng{fullhashraw}{1fab4ac7cec16c357b4edcc36cc7073f}
+      \strng{bibnamehash}{1fab4ac7cec16c357b4edcc36cc7073f}
+      \strng{authorbibnamehash}{1fab4ac7cec16c357b4edcc36cc7073f}
+      \strng{authornamehash}{1fab4ac7cec16c357b4edcc36cc7073f}
+      \strng{authorfullhash}{1fab4ac7cec16c357b4edcc36cc7073f}
+      \strng{authorfullhashraw}{1fab4ac7cec16c357b4edcc36cc7073f}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{A mudança no habitat de populações de peixes: de rio a represa - o modelo matemático}
+      \field{type}{mathesis}
+      \field{year}{1994}
+    \endentry
+    \entry{Gomes}{book}{}{}
+      \name{author}{3}{}{%
+        {{hash=42f221d624258d85806834e03393407d}{%
+           family={Gomes},
+           familyi={G\bibinitperiod},
+           given={L.\bibnamedelimi T.},
+           giveni={L\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+        {{hash=97d6224f71f84f713d622365345c226b}{%
+           family={Barros},
+           familyi={B\bibinitperiod},
+           given={L.\bibnamedelimi C.},
+           giveni={L\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+        {{hash=ea95762e25cac4590e0840867897a234}{%
+           family={Bede},
+           familyi={B\bibinitperiod},
+           given={B.},
+           giveni={B\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {SBMAC - Springer}%
+      }
+      \strng{namehash}{50af989678e81b155b1e1c3c216bb63c}
+      \strng{fullhash}{50af989678e81b155b1e1c3c216bb63c}
+      \strng{fullhashraw}{50af989678e81b155b1e1c3c216bb63c}
+      \strng{bibnamehash}{50af989678e81b155b1e1c3c216bb63c}
+      \strng{authorbibnamehash}{50af989678e81b155b1e1c3c216bb63c}
+      \strng{authornamehash}{50af989678e81b155b1e1c3c216bb63c}
+      \strng{authorfullhash}{50af989678e81b155b1e1c3c216bb63c}
+      \strng{authorfullhashraw}{50af989678e81b155b1e1c3c216bb63c}
+      \field{sortinit}{G}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{isbn}{978-3-319-22575-3}
+      \field{series}{Springer Briefs in Mathematics}
+      \field{title}{Fuzzy differential equation in various approaches}
+      \field{year}{2015}
+    \endentry
+    \entry{Mallet}{thesis}{}{}
+      \name{author}{1}{}{%
+        {{hash=b0c35e83a207ad2fc0ae23ddc3b13f9b}{%
+           family={Mallet},
+           familyi={M\bibinitperiod},
+           given={S.\bibnamedelimi M.},
+           giveni={S\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {LNCC/MCTI}%
+      }
+      \strng{namehash}{b0c35e83a207ad2fc0ae23ddc3b13f9b}
+      \strng{fullhash}{b0c35e83a207ad2fc0ae23ddc3b13f9b}
+      \strng{fullhashraw}{b0c35e83a207ad2fc0ae23ddc3b13f9b}
+      \strng{bibnamehash}{b0c35e83a207ad2fc0ae23ddc3b13f9b}
+      \strng{authorbibnamehash}{b0c35e83a207ad2fc0ae23ddc3b13f9b}
+      \strng{authornamehash}{b0c35e83a207ad2fc0ae23ddc3b13f9b}
+      \strng{authorfullhash}{b0c35e83a207ad2fc0ae23ddc3b13f9b}
+      \strng{authorfullhashraw}{b0c35e83a207ad2fc0ae23ddc3b13f9b}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Análise Numérica de Elementos Finitos}
+      \field{type}{phdthesis}
+      \field{year}{1990}
+    \endentry
+    \entry{Santos}{inproceedings}{}{}
+      \name{author}{2}{}{%
+        {{hash=460039f50a6dd5571b827558a31f08cc}{%
+           family={Santos},
+           familyi={S\bibinitperiod},
+           given={I.\bibnamedelimi L.\bibnamedelimi D.},
+           giveni={I\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{hash=57dd82ff5607b5f5c32e207f960ca386}{%
+           family={Silva},
+           familyi={S\bibinitperiod},
+           given={G.\bibnamedelimi N.},
+           giveni={G\bibinitperiod\bibinitdelim N\bibinitperiod}}}%
+      }
+      \strng{namehash}{307f3885c5a23918e2266be6cf89d7ca}
+      \strng{fullhash}{307f3885c5a23918e2266be6cf89d7ca}
+      \strng{fullhashraw}{307f3885c5a23918e2266be6cf89d7ca}
+      \strng{bibnamehash}{307f3885c5a23918e2266be6cf89d7ca}
+      \strng{authorbibnamehash}{307f3885c5a23918e2266be6cf89d7ca}
+      \strng{authornamehash}{307f3885c5a23918e2266be6cf89d7ca}
+      \strng{authorfullhash}{307f3885c5a23918e2266be6cf89d7ca}
+      \strng{authorfullhashraw}{307f3885c5a23918e2266be6cf89d7ca}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceeding Series of the Brazilian Society of Computational and Applied Mathematics}
+      \field{title}{Uma classe de problemas de controle ótimo em escalas temporais}
+      \field{year}{2013}
+      \field{pages}{010177-1\bibrangedash 6}
+      \range{pages}{-1}
+      \verb{doi}
+      \verb 10.5540/03.2013.001.01.0177
+      \endverb
+    \endentry
+    \entry{CNMAC}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=69791c5ba90dfe815dd457fd58018210}{%
+           family={SBMAC},
+           familyi={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{69791c5ba90dfe815dd457fd58018210}
+      \strng{fullhash}{69791c5ba90dfe815dd457fd58018210}
+      \strng{fullhashraw}{69791c5ba90dfe815dd457fd58018210}
+      \strng{bibnamehash}{69791c5ba90dfe815dd457fd58018210}
+      \strng{authorbibnamehash}{69791c5ba90dfe815dd457fd58018210}
+      \strng{authornamehash}{69791c5ba90dfe815dd457fd58018210}
+      \strng{authorfullhash}{69791c5ba90dfe815dd457fd58018210}
+      \strng{authorfullhashraw}{69791c5ba90dfe815dd457fd58018210}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{Online}
+      \field{note}{Acessado em 08/12/2021, \url{http://www.cnmac.org.br}}
+      \field{title}{Site oficial do Congresso Nacional de Matemática Aplicada}
+    \endentry
+    \entry{daSilva}{incollection}{}{}
+      \name{author}{2}{}{%
+        {{hash=9824886eaa52245b0b09a7c70d69d3a2}{%
+           family={Silva},
+           familyi={S\bibinitperiod},
+           given={P.\bibnamedelimi L.},
+           giveni={P\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+        {{hash=8860c7b63ae12599a5a97184e5e4a383}{%
+           family={Freire},
+           familyi={F\bibinitperiod},
+           given={I.\bibnamedelimi L.},
+           giveni={I\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+      }
+      \name{editor}{5}{}{%
+        {{hash=f95c464369cc460200518c8afeed050d}{%
+           family={Cojocaru},
+           familyi={C\bibinitperiod},
+           given={M.},
+           giveni={M\bibinitperiod}}}%
+        {{hash=9e5b6865287d4f22e1601ddcbccda2f2}{%
+           family={Kotsireas},
+           familyi={K\bibinitperiod},
+           given={I.},
+           giveni={I\bibinitperiod}}}%
+        {{hash=cc9f27c7225584584e49d9c1cdaa633b}{%
+           family={Makarov},
+           familyi={M\bibinitperiod},
+           given={R.},
+           giveni={R\bibinitperiod}}}%
+        {{hash=532c88d356f6f253417b1319c10ce359}{%
+           family={Melnik},
+           familyi={M\bibinitperiod},
+           given={R.},
+           giveni={R\bibinitperiod}}}%
+        {{hash=f2b8db8034edc3150043e2ac06e91fdd}{%
+           family={Shodiev},
+           familyi={S\bibinitperiod},
+           given={H.},
+           giveni={H\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{6121e0eb47df634e3d36bd76e2be8248}
+      \strng{fullhash}{6121e0eb47df634e3d36bd76e2be8248}
+      \strng{fullhashraw}{6121e0eb47df634e3d36bd76e2be8248}
+      \strng{bibnamehash}{6121e0eb47df634e3d36bd76e2be8248}
+      \strng{authorbibnamehash}{6121e0eb47df634e3d36bd76e2be8248}
+      \strng{authornamehash}{6121e0eb47df634e3d36bd76e2be8248}
+      \strng{authorfullhash}{6121e0eb47df634e3d36bd76e2be8248}
+      \strng{authorfullhashraw}{6121e0eb47df634e3d36bd76e2be8248}
+      \strng{editorbibnamehash}{153b2714721c420407f67a21b4a64908}
+      \strng{editornamehash}{153b2714721c420407f67a21b4a64908}
+      \strng{editorfullhash}{153b2714721c420407f67a21b4a64908}
+      \strng{editorfullhashraw}{153b2714721c420407f67a21b4a64908}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Interdisciplinary Topics in Applied Mathematics, Modeling and Computational Science, Springer Proceedings in Mathematics and Statistics}
+      \field{chapter}{23}
+      \field{title}{On the group analysis of a modified Novikov equation}
+      \field{volume}{117}
+      \field{year}{2015}
+      \field{pages}{161\bibrangedash 166}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1007/978-3-319-12307-3_23
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
