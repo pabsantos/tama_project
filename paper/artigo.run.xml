@@ -80,7 +80,7 @@
       <file>artigo.bcf</file>
     </requires>
     <requires type="editable">
-      <file>refs.bib</file>
+      <file>../refs.bib</file>
     </requires>
   </external>
 </requests>

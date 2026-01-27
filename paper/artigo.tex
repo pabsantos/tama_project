@@ -28,6 +28,7 @@
 \usepackage{amsmath, amsfonts, amssymb, amsthm, mathtools}
 \usepackage{url}
 \usepackage{csquotes}
+\usepackage{lipsum}
 % Ambientes pré-definidos
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}{Lemma}[section]
@@ -44,7 +45,7 @@
 
 % ref bibliográficas
 \usepackage[backend=biber, style=numeric-comp, maxnames=50]{biblatex}
-\addbibresource{refs.bib}
+\addbibresource{../refs.bib}
 \DeclareTextFontCommand{\emph}{\boldmath\bfseries}
 \DefineBibliographyStrings{brazil}{phdthesis = {Tese de doutorado}}
 \DefineBibliographyStrings{brazil}{mathesis = {Disserta\c{c}\~{a}o de mestrado}}
@@ -58,13 +59,11 @@
 % TÍTULO E AUTORAS(ES)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\title{Instruções para Submissão de Trabalhos Completos para o CNMAC}
+\title{Vulnerability of urban road networks to floods - A case study in São Paulo, Brazil}
 
 \author{
-    {\large Sandra M. C. Malta}\thanks{autora1@email}, {\large Patricia R. Fortes}\thanks{autora2@email}\\
-    {\small LNCC, Petrópolis, RJ} \\
-    {\large Mateus Bernardes}\thanks{autor3@email}  \\
-    {\small DAMAT/UTFPR, Curitiba, PR} \\
+    {\large Pedro Augusto Borges dos Santos}\thanks{pedro.borges@inpe.br}{\large Dr. Leonardo Bacelar Lima Santos}\thanks{leonardo.bacelar@inpe.br}\\
+    {\small Instituto Nacional de Pesquisas Espaciais, São José dos Campos, SP}
 }
 \criartitulo
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -75,66 +74,164 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{abstract}
-{\bf Resumo}. Este é o padrão (formato \LaTeX{} apenas) para a submissão de trabalhos da Categoria 2 do CNMAC, destinados à divulgação de pesquisas com resultados conclusivos. \emph{Nesta categoria, os trabalhos devem ser submetidos em Português ou Inglês, em forma de artigo com no mínimo 5 e no máximo 7 páginas, incluindo-se as referências bibliográficas.} Os \emph{trabalhos submetidos} que \emph{não estiverem de acordo com o formato} apresentado por esse padrão \emph{serão rejeitados} pelo Comitê Editorial do evento, sem análise do mérito científico.  
+
+\lipsum[1]
 
 \noindent
-{\bf Palavras-chave}. Instruções, \LaTeX, Trabalhos Completos, SBMAC, CNMAC  (entre 3-6 palavras-chave)
+{\bf Keywords}.
 \end{abstract}
 
-\section{Introdução}
+\section{Introduction}
 
-Este documento apresenta o padrão (formato \LaTeX{} apenas) para a submissão de trabalhos da Categoria 2 do CNMAC, destinados à divulgação de pesquisas com resultados conclusivos. \emph{Nesta categoria, os trabalhos devem ser submetidos em Português ou Inglês, em forma de artigo com no mínimo 5 e no máximo 7 páginas, incluindo-se as referências bibliográficas, figuras e tabelas.} Os \emph{trabalhos submetidos} que \emph{não estiverem de acordo com o formato} apresentado por esse padrão \emph{serão rejeitados} pelo Comitê Editorial do evento, sem análise do mérito científico.
+Road networks are vulnerable to natural disasters, such as floods, which can cause damage to infrastructure and adversely affect travel and/or local populations on degraded networks. After such events, certain places often become less accessible. Studying and analyzing the vulnerability of road networks helps prioritize planning, budgeting, and maintenance, as well as prepare effective emergency response plans. Not all road sections (or street blocks) in a network are equally critical to its functioning, since some have a greater impact on network flows than others, making it essential to assess vulnerability while considering the relative importance of different roads \cite{balijepalliMeasuringVulnerabilityRoad2014}.
 
-\section{Equações}
+Although the literature on road network vulnerability has advanced in proposing metrics and methodologies, it is still important to investigate and understand how flooding events impact different parts of the network based on their vulnerability. Each city has its own characteristics of road design, intersection density, mobility patterns, and population distribution, which can directly influence results. Understanding how topological properties and flood occurrence are related is essential to reveal potential particularities that may guide local policies for planning and managing road infrastructure.
 
-Equações inseridas no trabalho completo devem ser enumeradas sequencialmente e à direita no texto, por exemplo
-\begin{equation}
-\frac{\partial u}{\partial t}-\Delta u = f, \quad  \mathrm{em} \; \Omega. \label{Calor}
-\end{equation}
-Consulte o arquivo \verb!.tex! para mais detalhes sobre o código-fonte gerador da equação \eqref{Calor}.
+In this scenario, the objective of this study is to assess the vulnerability of urban road networks based on topology and the occurrence of floods. Using parts of the city of São Paulo, Brazil, as a case study, this manuscript explores the relationship between topological properties, flood occurrence, and population distribution in the studied area. For this work, vulnerability is defined as the degree to which a road network is susceptible to performance degradation when exposed to adverse events.
 
-\section{Tabelas e Figuras}
+Previous studies have also investigated the vulnerability of transport and road networks using graph-based approaches and the analysis of flood occurrence. To \textcite{sharifiResilientUrbanForms2019}, road design and network topology are the two main factors that influence the resilience of road networks. Focusing on topological properties, \textcite{morelliMeasuringUrbanRoad2021} focused on vulnerability in urban road systems, highlighting methodological aspects to evaluate structural robustness under different flood scenarios. More recently, \textcite{santosVulnerabilityAnalysisComplex2023} applied complex network theory to analyze vulnerability to flooding in rural road networks in the state of Santa Catarina, Brazil, offering insights into large-scale network behavior and its implications for regional transport planning.
 
-As(os) autoras(es) podem inserir figuras e tabelas no artigo. Elas devem estar dispostas próximas de suas referências no texto.
+This manuscript is organized as follows: Section 2 describes the study area, data, and methods used in this research. Section 3 presents the results of the analysis. Section 4 discusses the findings and provides insights into the implications of the research, concludes the manuscript, and suggests future research directions.
 
-\subsection{Inserção de Tabelas}
 
-A inserção de tabela deve ser feita com o ambiente \verb!table!, sendo enumerada, disposta horizontalmente centralizada, próxima de sua referência no texto, e a legenda imediatamente acima dela. Por exemplo, consulte a Tabela \ref{tabela01}.
+\section{Material and methods}
 
-\begin{table}[H]
-\caption{ {\small Categorias dos trabalhos.}}
-\centering
-\begin{tabular}{ccc}
-\hline
-Categoria do trabalho  & Número de páginas & Tipo do trabalho\\ \hline
-1          & 2  & $A$, $B$ e $C$    \\
-2          & entre 5 e 7  & apenas $C$ \\
-\hline
-\end{tabular}\label{tabela01}
-\end{table}
+\subsection{Study area}
 
-\subsection{Inserção de Figuras}
+The area investigated included five parts of the Tamanduateí (TTI) river basin inside the city of São Paulo, which are the following: \emph{Ribeirão do Oratório}, \emph{Montante do Ribeirão do Oratório}, \emph{Córrego Ourives/Ribeirão dos Couros}, \emph{Ribeirão dos Meninos}, and \emph{Área de Contribuição Direta de Escoamento Difuso - Meninos/Tamanduateí} \cite{prefeituradesaopauloPlanoDiretorDrenagem2024}.
 
-A inserção de figura deve ser feita com o ambiente \verb!figure!, ela deve estar enumerada, disposta horizontalmente centralizada, próxima de sua referência no texto, e legenda imediatamente abaixo da mesma. \emph{Deve-se indicar/referências a fonte, mesmo quando de autoria própria.} Por exemplo, consulte a Figura \ref{figura01}.
+To select the road network, a more appropriate area division is the origin/destination (OD) zones from the city of São Paulo. These OD zones were developed to count and manage traffic in the city \cite{metrospPesquisaOrigemDestino2023}. Unlike the TTI section limits, OD zones are ideal for selecting the road network, avoiding the cut or separation of street blocks when establishing the scenario. All OD zones that intersected the previously selected TTI sections were considered in this work. In total, 92 OD zones were considered (from a total of 527). The map in Figure \ref{fig:area} shows the considered TTI sections and OD zones.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=.7\textwidth]{ex_fig}
-\caption{ {\small Exemplo de imagem. Fonte: indicar.}}
-\label{figura01}
+\includegraphics[width=.7\textwidth]{../plot/study_area_map.png}
+\caption{Study scenario}
+\label{fig:area}
 \end{figure}
 
-\section{Sobre as Referências Bibliográficas}
+From the selected OD zones, it was possible to load the road network graph using the \verb|osmnx| Python package \cite{boeingModelingAnalyzingUrban2025}. The graph object considered the network from November 2025. The flood occurrence locations were loaded as point objects from \cite{cge-spAlagamentos2025}, between 2022-01 and 2025-04. Figure \ref{fig:flood} presents the loaded road network and flood locations.
 
-As referências bibliográficas devem ser inseridas conforme especificado neste padrão, as quais serão automaticamente geradas em ordem alfabética pelo sobrenome do primeiro autor. Este {\it template} fornece suporte para a inserção de referências bibliográficas com o Bib\LaTeX{}. Os dados de cada referência do trabalho devem ser adicionados no arquivo \verb+refs.bib+ e a indicação da referência no texto deve ser inserida com o comando \verb+\cite+. Seguem alguns exemplos de referências: livro \cite{Boldrini}, artigos publicados em periódicos \cite{Contiero,Cuminato}, capítulo de livro \cite{daSilva}, dissertação de mestrado \cite{Diniz}, tese de doutorado \cite{Mallet}, livro publicado dentro de uma série \cite{Gomes}, trabalho publicado em anais de eventos \cite{Santos}, {\it website} e outros \cite{CNMAC}. Por padrão, os nomes de todos os autores da obra citada aparecem na bibliografia. Para obras com mais de três autores, é também possível indicar apenas o nome do primeiro autor, seguido da expressão et al. Para implementar essa alternativa, basta remover ``\verb+,maxnames=50+'' do comando correspondente do código-fonte. Sempre que disponível forneça o DOI, ISBN ou ISSN, conforme o caso.
+\begin{figure}[H]
+\centering
+\includegraphics[width=.7\textwidth]{../plot/network_flood_map.png}
+\caption{Road network and flood points}
+\label{fig:flood}
+\end{figure}
 
-\section{Considerações Finais}
 
-Esta seção é reservada às principais conclusões e considerações finais do trabalho.
+\subsection{Graph analysis}
 
-\section*{Agradecimentos (opcional)}
+The road network presented in this work is represented by a graph, where each intersection is a node and each road segment is an edge. Graphs are structures used to model the relations between objects \cite{barabasiNetworkScience2016}. A graph $G$ can be defined as:
 
-Seção reservada aos agradecimentos dos autores, caso for pertinente. Por exemplo, agradecimento a fomentos. Se os autores optarem pela inclusão de Agradecimentos, a palavra ``(opcional)'' deve ser removida do título da seção. Esta seção não é numerada e deve ser disposta entre a última seção do corpo do texto e as Referências.
+\begin{equation}
+G = (V, E);
+\end{equation}
+
+where $V$ is a set of vertices (or nodes) and $E$ is a set of edges (or links) that connects pairs of nodes (or connects a node to itself).
+
+To investigate vulnerability, the edge ($e$) betweenness centrality ($c_B(e)$) is calculated by the sum of the fraction of all-pairs shortest paths that pass through that edge, as the following Equation shows:
+
+\begin{equation}
+c_B(e) = \sum_{s, t \in V} \frac{\sigma(s, t | e)}{\sigma(s, t)}; \label{eq:ebc}
+\end{equation}
+
+where $V$ is the set of nodes, $\sigma(s, t)$ is the number of shortest $(s, t)$-paths, and $\sigma(s, t | e)$ is the number of those paths passing through edge $e$ \cite{brandesFasterAlgorithmBetweenness2001}.
+
+Also, the node degree ($k_i$) was calculated, which is the number of edges connected to that node. This is known as adjacency ($a_{i j}$). When two nodes $i$ and $j$ are said to be neighbors, then $a_{i j} \neq 0$. The following Equation \ref{eq:ki} shows the computation of $k_i$ \cite{costaCharacterizationComplexNetworks2007}:
+
+\begin{equation}
+k_i = \sum_j a_{i j} \label{eq:ki}
+\end{equation}
+
+Regarding vulnerability, the edge betweenness centrality (EBC) of the road network was compared to the flood count for each edge. The count of flood events for each edge was calculated using a nearest spatial join approach, where the nearest edge to each flood point was considered.
+
+\subsection{Population data}
+
+The population data was collected from the Brazilian Demographic Census of 2022 \cite{ibgeCensoDemografico20222022}. The available data is aggregated by census tracts, and only the ones inside the study area were selected, by intersection to the OD zones.
+
+After selecting the census tracts, two steps were necessary to migrate population data from tracts to the network edges. First, a spatial join between tracts and nodes was performed. The population was equally divided among each node $i$ within the same census tract. Then, for each edge $e$ between nodes $(u, v)$, the population ($P_e(u, v)$) was calculated as the sum of the population of node $u$ ($P_u$) divided by its degree ($k_u$) plus the population of node $v$ ($P_v$) divided by its degree ($k_v$)
+
+\begin{equation}
+P_e(u, v) = \frac{P_u}{k_u} + \frac{P_v}{k_v} \label{eq:pop}
+\end{equation}
+
+\subsection{Computational tools}
+
+The analysis and most computational methods were performed using the Python programming language, version 3.12.12. The following packages were mainly used: \verb|osmnx| \cite{boeingModelingAnalyzingUrban2025}, \verb|networkx| \cite{hagbergExploringNetworkStructure2008}, and \verb|geopandas| \cite{jorisvandenbosscheGeopandasGeopandasV1112025}. The code was packaged and is available in the following repository: \textcite{santosTamaproject2025}.
+
+\section{Results}
+
+\subsection{Road network}
+
+The loaded road network graph has 21,045 nodes and 48,769 edges. Figure \ref{fig:power} shows the probability of node degree per degree value. There is a high probability of degree values between 2 and 6. The values vary between 1 and 10. The network does not strictly follow a power-law behavior.
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.8\textwidth]{../plot/degree_distribution.png}
+\caption{Node degree distribution}
+\label{fig:power}
+\end{figure}
+
+The map in Figure \ref{fig:ebcmap} shows the EBC of the road network. Most road sections have low EBC values (zero or near zero). Only a few road sections have higher EBC values, indicating that they are more vulnerable to events that impact serviceability.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.8\textwidth]{../plot/network_ebc_map.png}
+\caption{Network EBC results}
+\label{fig:ebcmap}
+\end{figure}
+
+\subsection{Population}
+
+The 7,329 census tracts loaded and selected are presented in Figure \ref{fig:popcensus}, showing the population value of each area unit. The map shows some urban voids in the study area and some high-density areas, with population values above 2,000. In total, the area has a population of 2,803,723 inhabitants.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.8\textwidth]{../plot/population_map.png}
+\caption{Population per census tract}
+\label{fig:popcensus}
+\end{figure}
+
+The map in Figure \ref{fig:popedge} presents the estimated population for all 48,769 graph edges, with a total population of 2,137,552. Approximately 95\% of the edges have population values below 100.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.8\textwidth]{../plot/edges_population_map.png}
+\caption{Population per network edge}
+\label{fig:popedge}
+\end{figure}
+
+\subsection{Network vulnerability}
+
+Figure \ref{fig:ebc-flood-scatter} shows the normalized flood count, which is the flood value divided by the total count of edges in each range of EBC values (bin size of 0.01), per EBC value. Edges in the ranges of 0.06-0.07 and 0.12-0.13 show the highest values of normalized flood count, which indicates parts of the road network that are considerably more vulnerable compared to other parts of the network.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.8\textwidth]{../plot/ebc_flood_scatter.png}
+\caption{EBC and normalized flood per edge}
+\label{fig:ebc-flood-scatter}
+\end{figure}
+
+Finally, Figure \ref{fig:ebc-pop-scatter} shows the relationship between the normalized population (population value per count of edges in each range of EBC) and EBC values. There is little variation in normalized population across EBC ranges, except for ranges around 0.08, which showed higher values, and around 0.16, which showed lower values.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.8\textwidth]{../plot/ebc_population_scatter.png}
+\caption{EBC and normalized population per edge}
+\label{fig:ebc-pop-scatter}
+\end{figure}
+
+\section{Conclusion}
+
+
+In this work, it was possible to analyze the vulnerability of urban roads in São Paulo, considering the area of the city within parts of the Tamanduateí river basin, based on data of flood events, population, and network topology.
+
+Mainly, the results showed that the urban road network distribution of degree values did not follow a power-law behavior. It was observed that only a few road sections showed relatively high EBC values, with approximately half of the edges presenting values close to zero.
+
+Some edges with EBC values between 0.06-0.07 and 0.12-0.13 presented high flood count values, normalized by the quantity of edges in each EBC range. This indicates locations where the network is more vulnerable and, therefore, more impacted by the effects of flooding events. Performing the same comparison with the population data for each edge, it was possible to observe that there is little variation in normalized population across EBC ranges, with exceptions at ranges around 0.08 (higher values) and 0.16 (lower values). This suggests that topological vulnerability does not show a clear relationship with population distribution across most of the network, and that are some more critical locations regarding exposure.
+
+Every flood event was considered as of equal impact on the network, but the original data has an attribute that indicates the level of severity (passable or unpassable flood event) that was not considered in this work. Also, future work should apply a vulnerability index to better assess the vulnerability of the network. Adding new exposure data, like traffic flow, and applying graph theory methods weighted by population, flow and physical distance could improve the precision of the analysis.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
