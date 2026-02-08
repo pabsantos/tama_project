@@ -781,6 +781,17 @@ def plot_ebc_population_scatter(
     # plt.show()
 
 
+def calc_composite_risk_index(G_gdf: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
+    """Calculates the Composite Risk Index per edge."""
+    df = G_gdf.copy()
+    for col in ("ebc", "population", "flood_count"):
+        cmin, cmax = df[col].min(), df[col].max()
+        df[f"{col}_norm"] = (df[col] - cmin) / (cmax - cmin) if cmax > cmin else 0.0
+    df["risk_index"] = (df["ebc_norm"] + df["population_norm"] + df["flood_count_norm"]) / 3
+    df.drop(columns=["ebc_norm", "population_norm", "flood_count_norm"], inplace=True)
+    return df
+
+
 def plot_population_flood_scatter(
     G_gdf: gpd.GeoDataFrame, figsize: tuple = (10, 8)
 ) -> None:

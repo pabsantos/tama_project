@@ -499,6 +499,55 @@ def plot_edges_population_map(
     _finish_map(ax, "plot/edges_population_map.png")
 
 
+def plot_composite_risk_map(
+    G_gdf: gpd.GeoDataFrame,
+    tti_sample: gpd.GeoDataFrame,
+    figsize: tuple = (12, 10),
+) -> None:
+    """
+    Plots a map with the street network colored by the Composite Risk Index.
+
+    Args:
+        G_gdf: GeoDataFrame with graph edges and 'risk_index' column
+        tti_sample: GeoDataFrame with TTI basin polygons (for bounds)
+        figsize: Figure size tuple (width, height)
+    """
+    fig, ax, tti_unified_mercator = _setup_map_base(tti_sample, figsize)
+
+    base_crs = tti_sample.crs
+    G_gdf = _ensure_crs_match(G_gdf, base_crs)
+    G_gdf_mercator = G_gdf.to_crs(epsg=3857)
+
+    _add_basemap_to_ax(ax, tti_unified_mercator.crs, ctx.providers.CartoDB.DarkMatter)
+
+    if "risk_index" not in G_gdf_mercator.columns:
+        raise ValueError("G_gdf must contain a 'risk_index' column")
+
+    risk_values = G_gdf_mercator["risk_index"]
+    vmin = risk_values.min()
+    vmax = risk_values.max()
+
+    norm = plt.Normalize(vmin=vmin, vmax=vmax)
+    cmap = plt.get_cmap("plasma")
+
+    G_gdf_mercator.plot(
+        ax=ax,
+        column="risk_index",
+        cmap=cmap,
+        linewidth=0.9,
+        alpha=0.8,
+        zorder=2,
+        legend=False,
+    )
+
+    sm = cm.ScalarMappable(norm=norm, cmap=cmap)
+    sm.set_array([])
+    cbar = plt.colorbar(sm, ax=ax, label="Composite index")
+    cbar.ax.tick_params(labelsize=9)
+
+    _finish_map(ax, "plot/composite_risk_map.png")
+
+
 def _calc_normalized_by_ebc_bin(
     G_gdf: gpd.GeoDataFrame,
     value_column: str,

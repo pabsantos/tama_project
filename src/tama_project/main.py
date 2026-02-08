@@ -9,6 +9,7 @@ from tama_project.analysis import (
     # plot_zscore_mean_time_series,
     # plot_zscore_rain_correlation,
     # plot_zscore_flood_violin,
+    calc_composite_risk_index,
     count_flood_occurrences_by_link,
     # fill_missing_dates,
     # plot_rain_time_series,
@@ -34,6 +35,7 @@ from tama_project.filter_sample import (
     select_tti_basin,
 )
 from tama_project.maps import (
+    plot_composite_risk_map,
     plot_edges_population_map,
     plot_network_ebc_map,
     plot_network_flood_map,
@@ -185,6 +187,9 @@ def main() -> None:
     G_gdf = assign_population_to_edges(G, nodes_with_population, G_gdf)
     console.print(f"-> Population assigned to {G_gdf.shape[0]} edges")
 
+    console.print("Calculating composite risk index")
+    G_gdf = calc_composite_risk_index(G_gdf)
+
     # Analysis ---
 
     console.rule("Data Analysis")
@@ -274,10 +279,13 @@ def main() -> None:
     console.print("Plotting normalized population map")
     plot_normalized_population_map(G_gdf, tti_sample, figsize=(13, 8))
 
+    console.print("Plotting composite risk index map")
+    plot_composite_risk_map(G_gdf, tti_sample, figsize=(13, 8))
+
     # Render ---
 
-    console.rule("Compiling manuscript and slides")
-    compile_all()
+    # console.rule("Compiling manuscript and slides")
+    # compile_all()
 
 
 if __name__ == "__main__":
