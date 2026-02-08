@@ -1,13 +1,14 @@
-import geopandas as gpd
-import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
-import matplotlib.cm as cm
-from matplotlib.lines import Line2D
-import contextily as ctx
-import osmnx as ox
-import networkx as nx
 from typing import Optional, Tuple
+
+import contextily as ctx
+import geopandas as gpd
+import matplotlib.cm as cm
+import matplotlib.patches as mpatches
+import matplotlib.pyplot as plt
+import networkx as nx
+import osmnx as ox
+import pandas as pd
+from matplotlib.lines import Line2D
 
 
 def _setup_map_base(
@@ -496,3 +497,141 @@ def plot_edges_population_map(
     cbar.ax.tick_params(labelsize=9)
 
     _finish_map(ax, "plot/edges_population_map.png")
+
+
+def _calc_normalized_by_ebc_bin(
+    G_gdf: gpd.GeoDataFrame,
+    value_column: str,
+    bin_width: float = 0.01,
+) -> gpd.GeoDataFrame:
+    """
+    For each EBC bin, calculates the normalized value (sum / count) and
+    assigns it back to each edge in that bin.
+
+    Args:
+        G_gdf: GeoDataFrame with 'ebc' and value_column columns
+        value_column: Column name to normalize
+        bin_width: Width of each EBC bin
+
+    Returns:
+        GeoDataFrame with added 'normalized_{value_column}' column
+    """
+    df = G_gdf.copy()
+
+    ebc_min = df["ebc"].min()
+    ebc_max = df["ebc"].max()
+
+    bin_edges = pd.interval_range(
+        start=ebc_min,
+        end=ebc_max + bin_width,
+        freq=bin_width,
+        closed="left",
+    )
+    df["ebc_bin"] = pd.cut(df["ebc"], bins=bin_edges, include_lowest=True)
+
+    norm_col = f"normalized_{value_column}"
+    bin_stats = df.groupby("ebc_bin", observed=True)[value_column].transform(
+        lambda x: x.sum() / len(x) if len(x) > 0 else 0
+    )
+    df[norm_col] = bin_stats
+    df = df.drop(columns=["ebc_bin"])
+
+    return df
+
+
+def plot_normalized_flood_map(
+    G_gdf: gpd.GeoDataFrame,
+    tti_sample: gpd.GeoDataFrame,
+    figsize: tuple = (12, 10),
+) -> None:
+    """
+    Plots a map with the street network colored by normalized flood count
+    per EBC bin.
+
+    Args:
+        G_gdf: GeoDataFrame with graph edges, 'ebc' and 'flood_count' columns
+        tti_sample: GeoDataFrame with TTI basin polygons (for bounds)
+        figsize: Figure size tuple (width, height)
+    """
+    fig, ax, tti_unified_mercator = _setup_map_base(tti_sample, figsize)
+
+    base_crs = tti_sample.crs
+    G_gdf = _ensure_crs_match(G_gdf, base_crs)
+
+    G_gdf = _calc_normalized_by_ebc_bin(G_gdf, "flood_count")
+    G_gdf_mercator = G_gdf.to_crs(epsg=3857)
+
+    _add_basemap_to_ax(ax, tti_unified_mercator.crs, ctx.providers.CartoDB.DarkMatter)
+
+    col = "normalized_flood_count"
+    vmin = G_gdf_mercator[col].min()
+    vmax = G_gdf_mercator[col].max()
+
+    norm = plt.Normalize(vmin=vmin, vmax=vmax)
+    cmap = plt.get_cmap("plasma")
+
+    G_gdf_mercator.plot(
+        ax=ax,
+        column=col,
+        cmap=cmap,
+        linewidth=0.9,
+        alpha=0.8,
+        zorder=2,
+        legend=False,
+    )
+
+    sm = cm.ScalarMappable(norm=norm, cmap=cmap)
+    sm.set_array([])
+    cbar = plt.colorbar(sm, ax=ax, label="Normalized Flood Count")
+    cbar.ax.tick_params(labelsize=9)
+
+    _finish_map(ax, "plot/normalized_flood_map.png")
+
+
+def plot_normalized_population_map(
+    G_gdf: gpd.GeoDataFrame,
+    tti_sample: gpd.GeoDataFrame,
+    figsize: tuple = (12, 10),
+) -> None:
+    """
+    Plots a map with the street network colored by normalized population
+    per EBC bin.
+
+    Args:
+        G_gdf: GeoDataFrame with graph edges, 'ebc' and 'population' columns
+        tti_sample: GeoDataFrame with TTI basin polygons (for bounds)
+        figsize: Figure size tuple (width, height)
+    """
+    fig, ax, tti_unified_mercator = _setup_map_base(tti_sample, figsize)
+
+    base_crs = tti_sample.crs
+    G_gdf = _ensure_crs_match(G_gdf, base_crs)
+
+    G_gdf = _calc_normalized_by_ebc_bin(G_gdf, "population")
+    G_gdf_mercator = G_gdf.to_crs(epsg=3857)
+
+    _add_basemap_to_ax(ax, tti_unified_mercator.crs, ctx.providers.CartoDB.DarkMatter)
+
+    col = "normalized_population"
+    vmin = G_gdf_mercator[col].min()
+    vmax = G_gdf_mercator[col].max()
+
+    norm = plt.Normalize(vmin=vmin, vmax=vmax)
+    cmap = plt.get_cmap("plasma")
+
+    G_gdf_mercator.plot(
+        ax=ax,
+        column=col,
+        cmap=cmap,
+        linewidth=0.9,
+        alpha=0.8,
+        zorder=2,
+        legend=False,
+    )
+
+    sm = cm.ScalarMappable(norm=norm, cmap=cmap)
+    sm.set_array([])
+    cbar = plt.colorbar(sm, ax=ax, label="Normalized Population")
+    cbar.ax.tick_params(labelsize=9)
+
+    _finish_map(ax, "plot/normalized_population_map.png")

@@ -1,19 +1,15 @@
 # from tama_project.rain_data import load_rain_data, calc_daily_rain
-from tama_project.filter_sample import (
-    select_tti_basin,
-    # filter_points,
-    filter_flood_points,
-    filter_od_zones,
-    # filter_rain_data,
-    # filter_level_data,
-)
 import geopandas as gpd
 import networkx as nx
 from rich.console import Console
-from tama_project.network import load_network, calc_params, calc_ebc
 
 # from tama_project.level_data import load_level_data, calc_daily_level
 from tama_project.analysis import (
+    # calc_level_zscore_mean_series,
+    # plot_zscore_mean_time_series,
+    # plot_zscore_rain_correlation,
+    # plot_zscore_flood_violin,
+    count_flood_occurrences_by_link,
     # fill_missing_dates,
     # plot_rain_time_series,
     # plot_spearman_correlogram,
@@ -24,30 +20,36 @@ from tama_project.analysis import (
     # plot_mean_level_time_series,
     # plot_network_scatter,
     plot_degree_distribution,
-    # calc_level_zscore_mean_series,
-    # plot_zscore_mean_time_series,
-    # plot_zscore_rain_correlation,
-    # plot_zscore_flood_violin,
-    count_flood_occurrences_by_link,
     plot_ebc_flood_scatter,
-    plot_population_histogram,
     plot_ebc_population_scatter,
     plot_population_flood_scatter,
+    plot_population_histogram,
+)
+from tama_project.filter_sample import (
+    # filter_points,
+    filter_flood_points,
+    filter_od_zones,
+    # filter_rain_data,
+    # filter_level_data,
+    select_tti_basin,
 )
 from tama_project.maps import (
-    plot_study_area_map,
-    plot_network_flood_map,
+    plot_edges_population_map,
     plot_network_ebc_map,
+    plot_network_flood_map,
+    plot_nodes_population_map,
+    plot_normalized_flood_map,
+    plot_normalized_population_map,
     # plot_network_ebc_flood_highlight_map,
     # plot_ebc_critical_ranges_map,
     plot_population_map,
-    plot_nodes_population_map,
-    plot_edges_population_map,
+    plot_study_area_map,
 )
+from tama_project.network import calc_ebc, calc_params, load_network
 from tama_project.population import (
-    load_census_tracts_intersected,
-    assign_population_to_nodes,
     assign_population_to_edges,
+    assign_population_to_nodes,
+    load_census_tracts_intersected,
 )
 from tama_project.render import compile_all
 
@@ -265,6 +267,12 @@ def main() -> None:
 
     console.print("Plotting edges population map")
     plot_edges_population_map(G_gdf, tti_sample, figsize=(13, 8))
+
+    console.print("Plotting normalized flood count map")
+    plot_normalized_flood_map(G_gdf, tti_sample, figsize=(13, 8))
+
+    console.print("Plotting normalized population map")
+    plot_normalized_population_map(G_gdf, tti_sample, figsize=(13, 8))
 
     # Render ---
 
