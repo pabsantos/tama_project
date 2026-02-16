@@ -1,3 +1,5 @@
+import math
+
 import osmnx as ox
 import networkx as nx
 import geopandas as gpd
@@ -41,6 +43,32 @@ def calc_params(G: nx.MultiDiGraph):
             "node": list(G.nodes()),
             "k": [ki[n] for n in G.nodes()],
             "c": [ci[n] for n in G.nodes()],
+        }
+    )
+
+
+def calc_network_comparison(G: nx.MultiDiGraph) -> pd.DataFrame:
+    G_undirected = nx.Graph(G)
+    largest_cc = max(nx.connected_components(G_undirected), key=len)
+    G_cc = G_undirected.subgraph(largest_cc).copy()
+
+    N = G_cc.number_of_nodes()
+    L = G_cc.number_of_edges()
+
+    k_mean = 2 * L / N
+    c_mean = nx.average_clustering(G_cc)
+    l_mean = nx.average_shortest_path_length(G_cc)
+
+    p = 2 * L / (N * (N - 1))
+    k_rand = p * (N - 1)
+    c_rand = p
+    l_rand = math.log(N) / math.log(k_mean)
+
+    return pd.DataFrame(
+        {
+            "parameter": ["N", "L", "<k>", "<c>", "<l>"],
+            "real": [N, L, k_mean, c_mean, l_mean],
+            "random": [N, L, k_rand, c_rand, l_rand],
         }
     )
 

@@ -47,7 +47,7 @@ from tama_project.maps import (
     plot_population_map,
     plot_study_area_map,
 )
-from tama_project.network import calc_ebc, calc_params, load_network
+from tama_project.network import calc_ebc, calc_network_comparison, calc_params, load_network
 from tama_project.population import (
     assign_population_to_edges,
     assign_population_to_nodes,
@@ -160,6 +160,10 @@ def main() -> None:
 
     console.print("Calculating network nodes degree and clustering")
     G_params = calc_params(G)
+
+    console.print("Comparing network with equivalent random network")
+    network_comparison = calc_network_comparison(G)
+    console.print(network_comparison.to_string(index=False))
 
     console.print("Calculating edge betweenness centrality and converting to gdf")
     G_path = "data/G_gdf.gpkg"
